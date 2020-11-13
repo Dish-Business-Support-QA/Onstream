@@ -1,6 +1,6 @@
 import os
 import pytest
-import json
+import time
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, JavascriptException
@@ -31,7 +31,7 @@ def setup(request):
     dishtv = "https://test.watchdishtv.com/"
     driver.get(dishtv)
     driver.maximize_window()
-    logo = "Wylde Logo"  # Big logo on home screen
+    logo = "DaVita Logo"  # Big logo on home screen
     src = driver.page_source
     request.cls.driver = driver
     request.cls.src = src
@@ -42,7 +42,7 @@ def setup(request):
 
 
 @pytest.fixture(scope="class")
-def time(request):
+def now_time(request):
     t1 = datetime.now() + timedelta(hours=1)
     t2 = datetime.now() + timedelta(hours=2)
     t3 = datetime.now() + timedelta(hours=3)
@@ -186,7 +186,7 @@ class TestHomeScreen:
             raise Exception("The test timed out! Please view the Screenshot!") from t
 
 
-@pytest.mark.usefixtures("setup", "directory", "time")
+@pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestGuideScreen:
     def test_images_displayed(self):
         WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
@@ -258,7 +258,7 @@ class TestGuideScreen:
             raise Exception("The test timed out! Please view the Screenshot!") from t
 
 
-@pytest.mark.usefixtures("setup", "directory", "time")
+@pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestSideBarScreen:
     def test_images_displayed(self):
         WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
@@ -341,41 +341,43 @@ class TestSideBarScreen:
             raise Exception("The test timed out! Please view the Screenshot!") from t
 
 
-@pytest.mark.usefixtures("setup", "directory", "time")
+@pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestLiveTV:
     def test_images_displayed(self):
         WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
             (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
-        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-            (By.XPATH, '//img[@alt="9419"]')))
+        WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+            (By.XPATH, '//img[@alt="9487"]')))
         try:
             if ":" + str(30) in self.now:
                 try:
-                    service = WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                        (By.XPATH, '(//a[@href="#/player/9419"])[1]')))  # go to the play button
+                    service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                        (By.XPATH, '(//a[@href="#/player/9487"])[1]')))  # go to the play button
                     ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
                     ActionChains(self.driver).click(service).perform()  # click on the service
                 except JavascriptException:
-                    service = WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                        (By.XPATH, '(//a[@href="#/player/9419"])[2]')))  # go to the play button
+                    service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                        (By.XPATH, '(//a[@href="#/player/9487"])[2]')))  # go to the play button
                     ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
                     ActionChains(self.driver).click(service).perform()  # click on the service
                     pass
             else:
-                service = WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                    (By.XPATH, '(//a[@href="#/player/9419"])[2]')))  # go to the play button
+                service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                    (By.XPATH, '(//a[@href="#/player/9487"])[2]')))  # go to the play button
                 ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
                 ActionChains(self.driver).click(service).perform()  # click on the service
-
             WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
                 (By.XPATH,
                  '//div[@class="nvI2gN1AMYiKwYvKEdfIc '
                  'schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
+                (By.XPATH,
+                 '//img[@id="bmpui-id-79"]')))
             # wait for loading screen to disappear
             self.driver.find_element_by_xpath('//span[@class="bmpui-ui-label bmpui-miniEpgToggleLabel"]').click()
             # click on the mini guide
-            self.driver.find_element_by_xpath('//img[@id="bmpui-id-32"]').is_displayed()  # Channel logo top right
-            self.driver.find_element_by_xpath('//img[@alt="8204"]').is_displayed()  # Channel logo in mini guide
+            self.driver.find_element_by_xpath('//div[@class="bmpui-container-wrapper"]').is_displayed()  # Channel logo top right
+            self.driver.find_element_by_xpath('//img[@alt="9487"]').is_displayed()  # Channel logo in mini guide
             self.driver.find_element_by_xpath('//div[@class="bmpui-ui-container bmpui-divider"]').is_displayed()
             # divider
             self.driver.find_element_by_xpath('//div[@class="bmpui-ui-container bmpui-fullTvGuideIcon"]').is_displayed()
@@ -408,9 +410,9 @@ class TestLiveTV:
             # Show episode
             self.driver.find_element_by_xpath('//span[text()="FULL TV GUIDE"]').is_displayed()
             # Full TV Guide
-            self.driver.find_element_by_xpath('//span[@class="bmpui-ui-playbacktimelabel"]').is_displayed()
+            """self.driver.find_element_by_xpath('//span[@class="bmpui-ui-playbacktimelabel"]').is_displayed()
             # Run Time of Service
-            self.driver.find_element_by_xpath('//span[@class="bmpui-ui-playbacktimelabel bmpui-text-right"]').is_displayed()
+            self.driver.find_element_by_xpath('//span[@class="bmpui-ui-playbacktimelabel bmpui-text-right"]').is_displayed()"""
             # Time left of Service
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
@@ -435,8 +437,8 @@ class TestLiveTV:
             self.driver.find_element_by_xpath('//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').is_displayed()
             # Mute button
             self.driver.find_element_by_xpath('//div[@class="bmpui-seekbar-markers"]').is_displayed()  # Seeker Bar
-            self.driver.find_element_by_xpath \
-                ('//div[@class="bmpui-seekbar-playbackposition-marker schema_accent_background"]').is_displayed()
+            """self.driver.find_element_by_xpath \
+                ('//div[@class="bmpui-seekbar-playbackposition-marker schema_accent_background"]').is_displayed()"""
             # Seeker Bar Dot
             self.driver.find_element_by_xpath('//button[@id="bmpui-id-18"]').is_displayed()
             # Cast button
@@ -467,8 +469,8 @@ class TestLiveTV:
             self.driver.find_element_by_xpath('//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').is_enabled()
             # Mute button
             self.driver.find_element_by_xpath('//div[@class="bmpui-seekbar-markers"]').is_enabled()  # Seeker Bar
-            self.driver.find_element_by_xpath \
-                ('//div[@class="bmpui-seekbar-playbackposition-marker schema_accent_background"]').is_enabled()
+            """self.driver.find_element_by_xpath \
+                ('//div[@class="bmpui-seekbar-playbackposition-marker schema_accent_background"]').is_enabled()"""
             # Seeker Bar Dot
             self.driver.find_element_by_xpath('//button[@id="bmpui-id-18"]').is_enabled()
             # Cast button
@@ -497,18 +499,28 @@ class TestLiveTV:
             #  turn full screen off and on
             self.driver.find_element_by_xpath('//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]').click()
             #  turn full screen on
-            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]').\
-                is_displayed()  # full screen on
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                (By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]')))
+            """self.driver.find_element_by_xpath('//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]').\
+                is_displayed()"""  # full screen on
             self.driver.find_element_by_xpath('//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]').click()
             #  turn full screen off
-            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]'). \
-                is_displayed()  # full screen off
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                (By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]')))
+            """self.driver.find_element_by_xpath('//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]'). \
+                is_displayed()"""  # full screen off
             #  turn CC button off and on
-            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-cctogglebutton bmpui-off"]').click()
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]'))).click()
+            """self.driver.find_element_by_xpath('//button[@class="bmpui-ui-cctogglebutton bmpui-off"]').click()"""
             # CC button turn on
-            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-cctogglebutton bmpui-on"]').is_displayed()
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                (By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-on"]')))
+            """self.driver.find_element_by_xpath('//button[@class="bmpui-ui-cctogglebutton bmpui-on"]').is_displayed()"""
             # CC button on
-            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-cctogglebutton bmpui-on"]').click()
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-on"]'))).click()
+            """self.driver.find_element_by_xpath('//button[@class="bmpui-ui-cctogglebutton bmpui-on"]').click()"""
             # CC button turn off
             self.driver.find_element_by_xpath('//button[@class="bmpui-ui-cctogglebutton bmpui-off"]').is_displayed()
             # CC button turn on
@@ -542,25 +554,28 @@ class TestSupportSettingsScreen:
         try:
             self.driver.find_element_by_xpath\
                 ('//h2[contains(text(), "Frequently Asked Questions")]').is_displayed()  # Freq asked questions
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                (By.XPATH, '//p[contains(text(), "How can I watch OnStream?")]')))
+            """self.driver.find_element_by_xpath \
+                ('//p[contains(text(), "How can I watch OnStream?")]').is_displayed()"""
+            """self.driver.find_element_by_xpath\
+                ('//p[contains(text(), "What devices are supported by OnStream? - Claudio’s Test")]').is_displayed()"""  # suported devices
             self.driver.find_element_by_xpath\
-                ('//p[contains(text(), "What devices are Supported?")]').is_displayed()  # suported devices
+                ('//p[contains(text(), "When I leave my property why do I lose access to OnStream?")]').is_displayed()  # additional channels
             self.driver.find_element_by_xpath\
-                ('//p[contains(text(), "How do I get additional channels?")]').is_displayed()  # additional channels
+                ('//p[contains(text(), "What internet speed do I need to be able to use OnStream?")]').is_displayed()  # who to contact
             self.driver.find_element_by_xpath\
-                ('//p[contains(text(), "I have access to the streaming '
-                 'service but am having an issue, who do I contact?")]').is_displayed()  # who to contact
+                ('//p[contains(text(), "What Channels does OnStream have?")]').is_displayed()  # how to cast
             self.driver.find_element_by_xpath\
-                ('//p[contains(text(), "How do I cast to a TV?")]').is_displayed()  # how to cast
-            self.driver.find_element_by_xpath\
-                ('//p[contains(text(), "When I leave my property why do I lose access to the service?")]').\
+                ('//p[contains(text(), "Are all channels live?")]').\
                 is_displayed()  # when I leave
-            self.driver.find_element_by_xpath\
-                ('//p[contains(text(), "Can’t find the answer to what you’re looking for?")]').is_displayed()
+            """self.driver.find_element_by_xpath\
+                ('//p[contains(text(), "Can’t find the answer to what you’re looking for?")]').is_displayed()"""
             # can't find answers
-            self.driver.find_element_by_xpath\
+            """self.driver.find_element_by_xpath\
                 ('//p[contains(text(), "Please Call Dish Support at: ")]').is_displayed()  # call dish support
             self.driver.find_element_by_xpath\
-                ('//p[contains(text(), "1-800-333-DISH")]').is_displayed()  # number to call
+                ('//p[contains(text(), "1-800-333-DISH")]').is_displayed()"""  # number to call
             app_version = self.driver.find_element_by_xpath('//p[@class="_2G-12UYHfG0a2MlL0pEXtD"]').text
             print(app_version, file=open("/Users/dishbusiness/Desktop/OnStreamTestFiles/Logs/app_version.txt", "w"))
         except NoSuchElementException as e:
@@ -594,10 +609,14 @@ class TestLegalSettingsScreen:
         try:
             self.driver.find_element_by_xpath\
                 ('//h2[contains(text(), "Legal")]').is_displayed()  # Legal
-            self.driver.find_element_by_xpath\
-                ('//h4[contains(text(), "Service Agreements")]').is_displayed()  # Service Agreements
-            self.driver.find_element_by_xpath\
-                ('//h4[contains(text(), "Terms and conditions")]').is_displayed()  # Terms and conditions
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//h4[contains(text(), "Service Agreement")]')))
+            """self.driver.find_element_by_xpath\
+                ('//h4[contains(text(), "Service Agreement")]').is_displayed()"""  # Service Agreements
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//h4[contains(text(), "Terms and Conditions")]')))
+            """self.driver.find_element_by_xpath\
+                ('//h4[contains(text(), "Terms and conditions")]').is_displayed()"""  # Terms and conditions
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
@@ -623,10 +642,12 @@ class TestLegalSettingsScreen:
         self.driver.find_element_by_xpath('//a[@role="button"]').click()
         self.driver.find_element_by_xpath \
             ('//a[@class="_1jBpd9Hw7kDuuvGVNTNlax schema_accent_background_hover"][2]').click()
-        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+        WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
             (By.XPATH, '//div[@class="_2hNvqt9m_HItaYpgkx528X"]')))
         try:
-            self.driver.find_element_by_xpath('//a[@href="https://www.dish.com/terms-conditions/"]').click()
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//a[@href="https://www.dish.com/terms-conditions/"]'))).click()
+            """self.driver.find_element_by_xpath('//a[@href="https://www.dish.com/terms-conditions/"]').click()"""
             self.driver.find_element_by_xpath('//h1[contains(text(), "Important Terms and Conditions")]').is_displayed()
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
@@ -636,12 +657,70 @@ class TestLegalSettingsScreen:
             raise Exception("The test timed out! Please view the Screenshot!") from t
 
 
-@pytest.mark.usefixtures("setup")
-class TestLog:
-    def test_log(self):
-        logs = []
-        for entry in self.driver.get_log('driver'):
-            logs.append(entry)
-        with open('/Users/dishbusiness/Desktop/OnStreamTestFiles/Duration/Time_Log.json', 'w+') as t:
-            json.dump(logs, t, ensure_ascii=False, indent=4)
+@pytest.mark.usefixtures("setup", "directory", "now_time")
+class TestServices:
+    def test_services_configured(self):
+        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+            (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+        WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+            (By.XPATH, '//img[@alt="9487"]')))
+        try:
+            if ":" + str(30) in self.now:
+                try:
+                    service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                        (By.XPATH, '(//a[@href="#/player/9487"])[1]')))  # go to the play button
+                    ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
+                    ActionChains(self.driver).click(service).perform()  # click on the service
+                except JavascriptException:
+                    service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                        (By.XPATH, '(//a[@href="#/player/9487"])[2]')))  # go to the play button
+                    ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
+                    ActionChains(self.driver).click(service).perform()  # click on the service
+                    pass
+            else:
+                service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                    (By.XPATH, '(//a[@href="#/player/9487"])[2]')))  # go to the play button
+                ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
+                ActionChains(self.driver).click(service).perform()  # click on the service
+            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
+                (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc '
+                 'schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
+                (By.XPATH, '//img[@id="bmpui-id-79"]')))
 
+            time.sleep(10)
+
+            self.driver.execute_script("window.history.go(-1)")
+
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                (By.XPATH, '//img[@alt="9487"]')))
+
+            if ":" + str(30) in self.now:
+                try:
+                    service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                        (By.XPATH, '(//a[@href="#/player/17616"])[1]')))  # go to the play button
+                    ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
+                    ActionChains(self.driver).click(service).perform()  # click on the service
+                except JavascriptException:
+                    service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                        (By.XPATH, '(//a[@href="#/player/17616"])[2]')))  # go to the play button
+                    ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
+                    ActionChains(self.driver).click(service).perform()  # click on the service
+                    pass
+            else:
+                service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                    (By.XPATH, '(//a[@href="#/player/17616"])[2]')))  # go to the play button
+                ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
+                ActionChains(self.driver).click(service).perform()  # click on the service
+            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
+                (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc '
+                 'schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
+                (By.XPATH, '//img[@id="bmpui-id-32"]')))
+            time.sleep(10)
+        except NoSuchElementException as e:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            raise Exception("Element could not be found! Please view the Screenshot!") from e
+        except TimeoutException as t:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            raise Exception("The test timed out! Please view the Screenshot!") from t

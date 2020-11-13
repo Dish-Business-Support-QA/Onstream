@@ -12,12 +12,23 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime, timedelta
 
+try:
+    base_path = os.environ['ONSTREAM_HOME']
+except KeyError:
+    print('Could not get environment variable "base_path". This is needed for the tests!"')
+    raise
+try:
+    test_path = os.environ['ONSTREAM_TEST']
+except KeyError:
+    print('Could not get environment variable "test_path". This is needed for the tests!"')
+    raise
+
 
 @pytest.fixture(scope="class")
 def directory(request):
     name = os.environ.get('PYTEST_CURRENT_TEST')
     """.split(':')[-1].split(' ')[0]"""
-    direct = '/Users/dishbusiness/Desktop/OnStreamTestFiles/Pictures/'
+    direct = os.path.join(base_path, 'Pictures')
     request.cls.direct = direct
     request.cls.name = name
     yield
@@ -577,7 +588,7 @@ class TestSupportSettingsScreen:
             self.driver.find_element_by_xpath\
                 ('//p[contains(text(), "1-800-333-DISH")]').is_displayed()"""  # number to call
             app_version = self.driver.find_element_by_xpath('//p[@class="_2G-12UYHfG0a2MlL0pEXtD"]').text
-            print(app_version, file=open("/Users/dishbusiness/Desktop/OnStreamTestFiles/Logs/app_version.txt", "w"))
+            print(app_version, file=open(os.path.join(base_path, 'Logs', 'app_version.txt'), "w"))
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e

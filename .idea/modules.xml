@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../Evolve_Test/.idea/Evolve_Test.iml" filepath="$PROJECT_DIR$/../Evolve_Test/.idea/Evolve_Test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Onstream_test.iml" filepath="$PROJECT_DIR$/.idea/Onstream_test.iml" />
     </modules>
   </component>

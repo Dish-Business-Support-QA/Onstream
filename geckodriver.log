@@ -26855,3 +26855,9 @@ toEvents/<@chrome://marionette/content/action.js:1156:16
 action.dispatchTickActions@chrome://marionette/content/action.js:1060:35
 action.dispatch/chainEvents<@chrome://marionette/content/action.js:1028:20
 1594832246329	Marionette	INFO	Stopped listening on port 49165
+1605290906948	geckodriver	INFO	Listening on 127.0.0.1:55496
+1605290909020	geckodriver	INFO	Listening on 127.0.0.1:55519
+1605290909730	geckodriver	INFO	Listening on 127.0.0.1:55534
+1605290911421	geckodriver	INFO	Listening on 127.0.0.1:55555
+1605290912267	geckodriver	INFO	Listening on 127.0.0.1:55570
+1605290912707	geckodriver	INFO	Listening on 127.0.0.1:55581

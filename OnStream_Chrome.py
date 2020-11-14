@@ -28,7 +28,7 @@ except KeyError:
 def directory(request):
     name = os.environ.get('PYTEST_CURRENT_TEST')
     """.split(':')[-1].split(' ')[0]"""
-    direct = os.path.join(base_path, 'Pictures')
+    direct = os.path.join(base_path, "Pictures")
     request.cls.direct = direct
     request.cls.name = name
     yield
@@ -363,18 +363,18 @@ class TestLiveTV:
             if ":" + str(30) in self.now:
                 try:
                     service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                        (By.XPATH, '(//a[@href="#/player/9487"])[1]')))  # go to the play button
+                        (By.XPATH, '(//a[@href="#/player/9421"])[1]')))  # go to the play button
                     ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
                     ActionChains(self.driver).click(service).perform()  # click on the service
                 except JavascriptException:
                     service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                        (By.XPATH, '(//a[@href="#/player/9487"])[2]')))  # go to the play button
+                        (By.XPATH, '(//a[@href="#/player/9421"])[2]')))  # go to the play button
                     ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
                     ActionChains(self.driver).click(service).perform()  # click on the service
                     pass
             else:
-                service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                    (By.XPATH, '(//a[@href="#/player/9487"])[2]')))  # go to the play button
+                service = WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                    (By.XPATH, '(//a[@href="#/player/9421"])[2]')))  # go to the play button
                 ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
                 ActionChains(self.driver).click(service).perform()  # click on the service
             WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
@@ -383,7 +383,7 @@ class TestLiveTV:
                  'schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
             WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
                 (By.XPATH,
-                 '//img[@id="bmpui-id-79"]')))
+                 '//img[@id="bmpui-id-33"]')))
             # wait for loading screen to disappear
             self.driver.find_element_by_xpath('//span[@class="bmpui-ui-label bmpui-miniEpgToggleLabel"]').click()
             # click on the mini guide
@@ -676,59 +676,17 @@ class TestServices:
         WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
             (By.XPATH, '//img[@alt="9487"]')))
         try:
-            if ":" + str(30) in self.now:
-                try:
-                    service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                        (By.XPATH, '(//a[@href="#/player/9487"])[1]')))  # go to the play button
-                    ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
-                    ActionChains(self.driver).click(service).perform()  # click on the service
-                except JavascriptException:
-                    service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                        (By.XPATH, '(//a[@href="#/player/9487"])[2]')))  # go to the play button
-                    ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
-                    ActionChains(self.driver).click(service).perform()  # click on the service
-                    pass
-            else:
-                service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                    (By.XPATH, '(//a[@href="#/player/9487"])[2]')))  # go to the play button
-                ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
-                ActionChains(self.driver).click(service).perform()  # click on the service
-            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
-                (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc '
-                 'schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
-            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
-                (By.XPATH, '//img[@id="bmpui-id-79"]')))
+            links = []
+            channels = self.driver.find_elements_by_xpath('(//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"])')
+            for i in range(len(channels)):
+                links.append(channels[i].get_attribute("href"))
 
-            time.sleep(10)
-
-            self.driver.execute_script("window.history.go(-1)")
-
-            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                (By.XPATH, '//img[@alt="9487"]')))
-
-            if ":" + str(30) in self.now:
-                try:
-                    service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                        (By.XPATH, '(//a[@href="#/player/17616"])[1]')))  # go to the play button
-                    ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
-                    ActionChains(self.driver).click(service).perform()  # click on the service
-                except JavascriptException:
-                    service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                        (By.XPATH, '(//a[@href="#/player/17616"])[2]')))  # go to the play button
-                    ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
-                    ActionChains(self.driver).click(service).perform()  # click on the service
-                    pass
-            else:
-                service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                    (By.XPATH, '(//a[@href="#/player/17616"])[2]')))  # go to the play button
-                ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
-                ActionChains(self.driver).click(service).perform()  # click on the service
-            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
-                (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc '
-                 'schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
-            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
-                (By.XPATH, '//img[@id="bmpui-id-32"]')))
-            time.sleep(10)
+            for link in links:
+                self.driver.get(link)
+                WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
+                    (By.XPATH,
+                     '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+                time.sleep(30)
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e

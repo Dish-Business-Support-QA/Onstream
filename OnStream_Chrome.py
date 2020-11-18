@@ -1,6 +1,6 @@
 import os
 import pytest
-import time
+import json
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, JavascriptException
@@ -11,6 +11,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime, timedelta
+
+count = {'loading_screen': 0, 'unable_to_connect': 0, 'error_404': 0, 'element_loading': 0, 'timeout_exception': 0}
 
 try:
     base_path = os.environ['ONSTREAM_HOME']
@@ -28,7 +30,7 @@ except KeyError:
 def directory(request):
     name = os.environ.get('PYTEST_CURRENT_TEST')
     """.split(':')[-1].split(' ')[0]"""
-    direct = os.path.join(base_path, "Pictures")
+    direct = os.path.join(base_path, "/", "Pictures")
     request.cls.direct = direct
     request.cls.name = name
     yield
@@ -76,9 +78,10 @@ def now_time(request):
 @pytest.mark.usefixtures("setup", "directory")
 class TestHomeScreen:
     def test_images_displayed(self):
-        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-            (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]')))
+        global count
         try:
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]')))
             self.driver.find_element_by_xpath('//div[@class="_1oUh3apnwdwzBiB_Uw6seb "]').is_displayed()  # banner
             self.driver.find_element_by_xpath('//img[@alt="Dish Logo"]').is_displayed()  # dish
             self.driver.find_element_by_xpath('//img[@alt="Dish Logo"]').is_displayed()  # dish fiber
@@ -96,11 +99,35 @@ class TestHomeScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_buttons_displayed(self):
+        global count
         try:
             self.driver.find_element_by_xpath('//a[contains(@href,"home")]').is_displayed()  # home
             self.driver.find_element_by_xpath('//a[contains(@href,"epg")]').is_displayed()  # guide
@@ -120,11 +147,35 @@ class TestHomeScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_buttons_enabled(self):
+        global count
         try:
             self.driver.find_element_by_xpath('//a[contains(@href,"home")]').is_enabled()  # home
             self.driver.find_element_by_xpath('//a[contains(@href,"epg")]').is_enabled()  # guide
@@ -145,11 +196,35 @@ class TestHomeScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_text_displayed(self):
+        global count
         try:
             self.driver.find_element_by_xpath('//span[contains(text(), "Home")]')  # home
             self.driver.find_element_by_xpath('//span[contains(text(), "TV Guide")]')  # guide
@@ -165,11 +240,35 @@ class TestHomeScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_link_clickable(self):
+        global count
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
                 (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 null"]'))).click()  # learn more
@@ -192,19 +291,43 @@ class TestHomeScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
 
 @pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestGuideScreen:
     def test_images_displayed(self):
-        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-            (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
-        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-            (By.XPATH, '//div[@class="_3s9BHby87YFunQATlfDFIG _13zgmvI0VzaLaUVl9-7siJ"]')))
+        global count
         try:
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//div[@class="_3s9BHby87YFunQATlfDFIG _13zgmvI0VzaLaUVl9-7siJ"]')))
             self.driver.find_element_by_xpath('//div[@class="_1oUh3apnwdwzBiB_Uw6seb "]').is_displayed()  # banner
             self.driver.find_element_by_xpath('//img[@alt="Dish Logo"]').is_displayed()  # dish
             self.driver.find_element_by_xpath('//img[@alt="Dish Logo"]').is_displayed()  # custom_logo
@@ -216,11 +339,35 @@ class TestGuideScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_text_displayed(self):
+        global count
         try:
             self.driver.find_element_by_xpath\
                 ('//div[@class="_1AhFoq9LRVrQE0BrdpGozJ schema_epgTimelineColors_background"]').is_displayed()  # TODAY
@@ -234,11 +381,35 @@ class TestGuideScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_buttons_displayed(self):
+        global count
         try:
             self.driver.find_element_by_xpath('//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_displayed()  # right arrow
             self.driver.find_element_by_xpath('//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]').is_displayed()  # play button
@@ -249,11 +420,35 @@ class TestGuideScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_buttons_clickable(self):
+        global count
         try:
             self.driver.find_element_by_xpath('//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_enabled()  # right arrow
             self.driver.find_element_by_xpath('//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]').is_enabled()  # play button
@@ -264,25 +459,45 @@ class TestGuideScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
 
 @pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestSideBarScreen:
     def test_images_displayed(self):
-        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-            (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
-        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-            (By.XPATH, '//div[@class="_3s9BHby87YFunQATlfDFIG _13zgmvI0VzaLaUVl9-7siJ"]')))
+        global count
         try:
-            info = WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//div[@class="_1Pu3Odv6M5tX6rukxQ6GG3"]')))  # go to the more info button
-            ActionChains(self.driver).move_to_element(info).perform()  # hover mouse over it
-            ActionChains(self.driver).click(info).perform()
-            """self.driver.find_element_by_xpath('//div[@class="_1Pu3Odv6M5tX6rukxQ6GG3"]').click()
-            # click the more info button"""
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="9487"]')))
+            info = WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//img[@alt="9487"]')))  # go to the more info button
+            info1 = ActionChains(self.driver).move_to_element_with_offset(info, 132.5, 25.5).perform()  # hover mouse over it
+            ActionChains(self.driver).click(info1).perform()  # click the more info button
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="DISC"]')))
             self.driver.find_element_by_xpath('//div[@class="_2hHA9bFIq-vRi5vrWcTHJY"]').is_displayed()  # show picture
             self.driver.find_element_by_xpath('//div[@class="_1oUh3apnwdwzBiB_Uw6seb "]').is_displayed()  # banner
             self.driver.find_element_by_xpath('//img[@alt="Dish Logo"]').is_displayed()  # dish
@@ -295,19 +510,41 @@ class TestSideBarScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_text_displayed(self):
+        global count
         try:
             """self.driver.find_element_by_xpath('//div[@class="_1JoT790R-w1p_Jv3yX7LrI"]').is_displayed()  # channel name"""
             self.driver.find_element_by_xpath('//div[@class="QJgwfXrH2X5_BIUd7kMnu"]').is_displayed()
             # event name and time
-            self.driver.find_element_by_xpath\
-                ('//div[@class="_1AhFoq9LRVrQE0BrdpGozJ schema_epgTimelineColors_background"]').is_displayed()  # TODAY
-            self.driver.find_element_by_xpath\
-                ('//div[contains(text(), "%s")]' % self.now).is_displayed()  # Time 1
+            self.driver.find_element_by_xpath('//div[@class="_1AhFoq9LRVrQE0BrdpGozJ schema_epgTimelineColors_background"]').is_displayed()  # TODAY
+            self.driver.find_element_by_xpath('//div[contains(text(), "%s")]' % self.now).is_displayed()  # Time 1
             self.driver.find_element_by_xpath('//div[contains(text(), "%s")]' % self.now1).is_displayed()  # Time 2
             self.driver.find_element_by_xpath('//div[contains(text(), "%s")]' % self.now2).is_displayed()  # Time 3
             self.driver.find_element_by_xpath('//div[contains(text(), "%s")]' % self.now3).is_displayed()  # Time 4
@@ -315,11 +552,35 @@ class TestSideBarScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_buttons_displayed(self):
+        global count
         try:
             self.driver.find_element_by_xpath('//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]').is_displayed()
             # exit button
@@ -331,11 +592,35 @@ class TestSideBarScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_buttons_clickable(self):
+        global count
         try:
             self.driver.find_element_by_xpath('//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]').is_enabled()
             # exit button
@@ -344,46 +629,69 @@ class TestSideBarScreen:
             self.driver.find_element_by_xpath('//a[contains(@href,"home")]').is_enabled()  # home button
             self.driver.find_element_by_xpath('//a[@class="_2r6Lq2AYJyfbZABtJvL0D_"]').is_enabled()  # Setting Cog
             self.driver.find_element_by_xpath('//span[contains(text(), "WATCH LIVE")]').is_enabled()  # Watch Live
+            self.driver.find_element_by_xpath('//span[contains(text(), "WATCH LIVE")]').click()  # Watch Live
+            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
+                (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
 
 @pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestLiveTV:
     def test_images_displayed(self):
-        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-            (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
-        WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-            (By.XPATH, '//img[@alt="9487"]')))
+        global count
         try:
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="9487"]')))
             if ":" + str(30) in self.now:
                 try:
                     service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                        (By.XPATH, '(//a[@href="#/player/9421"])[1]')))  # go to the play button
+                        (By.XPATH, '(//a[@href="#/player/9419"])[1]')))  # go to the play button
                     ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
                     ActionChains(self.driver).click(service).perform()  # click on the service
                 except JavascriptException:
                     service = WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                        (By.XPATH, '(//a[@href="#/player/9421"])[2]')))  # go to the play button
+                        (By.XPATH, '(//a[@href="#/player/9419"])[2]')))  # go to the play button
                     ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
                     ActionChains(self.driver).click(service).perform()  # click on the service
                     pass
             else:
                 service = WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                    (By.XPATH, '(//a[@href="#/player/9421"])[2]')))  # go to the play button
+                    (By.XPATH, '(//a[@href="#/player/9419"])[2]')))  # go to the play button
                 ActionChains(self.driver).move_to_element(service).perform()  # hover mouse over it
                 ActionChains(self.driver).click(service).perform()  # click on the service
             WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
-                (By.XPATH,
-                 '//div[@class="nvI2gN1AMYiKwYvKEdfIc '
-                 'schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+                (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
             WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
                 (By.XPATH,
-                 '//img[@id="bmpui-id-33"]')))
+                 '//img[@id="bmpui-id-32"]')))
             # wait for loading screen to disappear
             self.driver.find_element_by_xpath('//span[@class="bmpui-ui-label bmpui-miniEpgToggleLabel"]').click()
             # click on the mini guide
@@ -402,11 +710,35 @@ class TestLiveTV:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_text_displayed(self):
+        global count
         try:
             self.driver.find_element_by_xpath \
                 ('//div[@class="_1AhFoq9LRVrQE0BrdpGozJ schema_epgTimelineColors_background"]').is_displayed()  # TODAY
@@ -428,11 +760,35 @@ class TestLiveTV:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_buttons_displayed(self):
+        global count
         try:
             self.driver.find_element_by_xpath('//div[@class="bmpui-ui-container bmpui-fullTvGuideIcon"]').is_displayed()
             # Full TV Guide back button
@@ -460,11 +816,35 @@ class TestLiveTV:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_buttons_enabled(self):
+        global count
         try:
             self.driver.find_element_by_xpath('//div[@class="bmpui-ui-container bmpui-fullTvGuideIcon"]').is_enabled()
             # Full TV Guide back button
@@ -492,63 +872,114 @@ class TestLiveTV:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_control_bar_functions(self):
+        global count
         try:
             #  turn mute button off and on
             self.driver.find_element_by_xpath('//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').click()
             # Mute button turn on
-            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]')\
-                .is_displayed()  # Mute button on
-            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]').click()
-            # Mute button turn off
+            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]').is_displayed()  # Mute button on
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//button[@data-bmpui-volume-level-tens="10"]')))
+            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]').click()  # Mute button turn off
             self.driver.find_element_by_xpath('//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]')\
                 .is_displayed()  # Mute button off
+            # volume slider bar
+            slider = WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="bmpui-ui-volumeslider"]')))
+            ActionChains(self.driver).click_and_hold(slider).move_by_offset(10, 0).release().perform()
+            if WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                    (By.XPATH, '(//div[@aria-valuenow="55"])'))):
+                assert True
+            else:
+                assert False, "Volume did not increase on the slider volume bar"
             #  turn full screen off and on
-            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]').click()
-            #  turn full screen on
+            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]').click()  # turn full screen on
             WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                (By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]')))
-            """self.driver.find_element_by_xpath('//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]').\
-                is_displayed()"""  # full screen on
-            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]').click()
-            #  turn full screen off
+                (By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]')))  # full screen on
+            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]').click()  # turn full screen off
             WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                (By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]')))
-            """self.driver.find_element_by_xpath('//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]'). \
-                is_displayed()"""  # full screen off
-            #  turn CC button off and on
+                (By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]')))  # full screen off
+            # turn CC button off and on
+            if WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]'))):
+                WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]'))).click()  # CC button turn on
+                WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                    (By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-on"]')))  # CC button on
+                WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                    (By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-on"]'))).click()  # CC button turn off
+                self.driver.find_element_by_xpath('//button[@class="bmpui-ui-cctogglebutton bmpui-off"]').is_displayed()  # CC button off
+            else:
+                assert False, "Program could be on a commercial, please check screenshot"
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]'))).click()
-            """self.driver.find_element_by_xpath('//button[@class="bmpui-ui-cctogglebutton bmpui-off"]').click()"""
-            # CC button turn on
-            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                (By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-on"]')))
-            """self.driver.find_element_by_xpath('//button[@class="bmpui-ui-cctogglebutton bmpui-on"]').is_displayed()"""
-            # CC button on
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-on"]'))).click()
-            """self.driver.find_element_by_xpath('//button[@class="bmpui-ui-cctogglebutton bmpui-on"]').click()"""
-            # CC button turn off
-            self.driver.find_element_by_xpath('//button[@class="bmpui-ui-cctogglebutton bmpui-off"]').is_displayed()
-            # CC button turn on
+                (By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]'))).click()  # CC button turn on
+            self.driver.find_element_by_xpath('//span[@class="bmpui-ui-label bmpui-miniEpgToggleLabel"]').click()
+            if WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//div[@class="bmpui-ui-subtitle-overlay bmpui-cea608"]'))):
+                assert True
+            elif self.driver.find_element_by_xpath('//div[@class="bmpui-ui-subtitle-overlay bmpui-hidden"]'):
+                assert False, "Program could be on commercial, please check screenshot"
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
 
 @pytest.mark.usefixtures("setup", "directory")
 class TestSupportSettingsScreen:
     def test_images_displayed(self):
-        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-            (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+        global count
         try:
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
             self.driver.find_element_by_xpath('//a[@role="button"]').click()
             self.driver.find_element_by_xpath('//a[@class="_1jBpd9Hw7kDuuvGVNTNlax schema_accent_background_hover"]').click()
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
@@ -557,11 +988,35 @@ class TestSupportSettingsScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_text_displayed(self):
+        global count
         try:
             self.driver.find_element_by_xpath\
                 ('//h2[contains(text(), "Frequently Asked Questions")]').is_displayed()  # Freq asked questions
@@ -592,17 +1047,41 @@ class TestSupportSettingsScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
 
 @pytest.mark.usefixtures("setup", "directory")
 class TestLegalSettingsScreen:
     def test_images_displayed(self):
-        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-            (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+        global count
         try:
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
             self.driver.find_element_by_xpath('//a[@role="button"]').click()
             self.driver.find_element_by_xpath\
                 ('//a[@class="_1jBpd9Hw7kDuuvGVNTNlax schema_accent_background_hover"][2]').click()
@@ -612,11 +1091,35 @@ class TestLegalSettingsScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_text_displayed(self):
+        global count
         try:
             self.driver.find_element_by_xpath\
                 ('//h2[contains(text(), "Legal")]').is_displayed()  # Legal
@@ -631,31 +1134,79 @@ class TestLegalSettingsScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_link1_clickable(self):
+        global count
         try:
             self.driver.find_element_by_xpath('//a[@href="https://www.dish.com/service-agreements/"]').click()
             self.driver.find_element_by_xpath('//h1[contains(text(), "DISH Network Service Agreements")]').is_displayed()
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
     def test_link2_clickable(self):
-        self.driver.get(self.dishtv)
-        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-            (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
-        self.driver.find_element_by_xpath('//a[@role="button"]').click()
-        self.driver.find_element_by_xpath \
-            ('//a[@class="_1jBpd9Hw7kDuuvGVNTNlax schema_accent_background_hover"][2]').click()
-        WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-            (By.XPATH, '//div[@class="_2hNvqt9m_HItaYpgkx528X"]')))
+        global count
         try:
+            self.driver.get(self.dishtv)
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+            self.driver.find_element_by_xpath('//a[@role="button"]').click()
+            self.driver.find_element_by_xpath \
+                ('//a[@class="_1jBpd9Hw7kDuuvGVNTNlax schema_accent_background_hover"][2]').click()
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                (By.XPATH, '//div[@class="_2hNvqt9m_HItaYpgkx528X"]')))
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
                 (By.XPATH, '//a[@href="https://www.dish.com/terms-conditions/"]'))).click()
             """self.driver.find_element_by_xpath('//a[@href="https://www.dish.com/terms-conditions/"]').click()"""
@@ -663,33 +1214,92 @@ class TestLegalSettingsScreen:
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
 
 
 @pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestServices:
     def test_services_configured(self):
-        WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-            (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
-        WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-            (By.XPATH, '//img[@alt="9487"]')))
+        global count
         try:
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+            WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located(
+                (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
+                (By.XPATH, '//img[@alt="9487"]')))
             links = []
             channels = self.driver.find_elements_by_xpath('(//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"])')
             for i in range(len(channels)):
                 links.append(channels[i].get_attribute("href"))
-
-            for link in links:
+            all_channels = list(dict.fromkeys(links))
+            for link in all_channels:
                 self.driver.get(link)
+                self.driver.refresh()
                 WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
-                    (By.XPATH,
-                     '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
-                time.sleep(30)
+                    (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+                WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                    (By.XPATH, '//div[@class="bmpui-ui-uicontainer bmpui-flexbox bmpui-player-state-playing bmpui-controls-hidden"]')))
         except NoSuchElementException as e:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             raise Exception("Element could not be found! Please view the Screenshot!") from e
-        except TimeoutException as t:
+        except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            raise Exception("The test timed out! Please view the Screenshot!") from t
+            loading_circle = self.driver.find_elements_by_xpath('//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            if len(loading_circle) > 0:
+                print("Stuck on loading screen")
+                count["loading_screen"] += 1
+                assert False
+            elif len(no_streaming) > 0:
+                print("It appears that you are not able to connect to Streaming Services at this time.")
+                count["unable_to_connect"] += 1
+                assert False
+            elif len(error_404) > 0:
+                print("404 error")
+                count["error_404"] += 1
+                assert False
+            elif len(loading_element):
+                print("Stuck loading an element")
+                count["element_loading"] += 1
+                assert False
+            else:
+                print("timeout error")
+                count["timeout_exception"] += 1
+                assert False
+
+
+class TestCount:
+    def test_count(self):
+        global count
+        errors = open(os.path.join(base_path, 'error_count.txt'), 'a+')
+        with errors as file:
+            file.write(json.dumps(count))
+        print(count)

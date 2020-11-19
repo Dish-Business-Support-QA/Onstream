@@ -1,17 +1,47 @@
 import os
 import subprocess
 from threading import Thread
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.wait import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 try:
     test_path = os.environ['ONSTREAM_TEST']
 except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
+test_run = 1
+version = '1.1.15'
+channel_changes = 100
+
+
+class ChannelCount(object):
+    caps = DesiredCapabilities.CHROME
+    caps['goog:loggingPrefs'] = {'performance': 'ALL'}
+    driver = webdriver.Chrome(ChromeDriverManager().install(), desired_capabilities=caps)
+    dishtv = "https://watchdishtv.com/"
+    driver.get(dishtv)
+    WebDriverWait(driver, 30).until(ec.presence_of_element_located(
+        (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+    WebDriverWait(driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+    WebDriverWait(driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="9491"]')))
+    links = []
+    channels = driver.find_elements_by_xpath('(//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"])')
+    for i in range(len(channels)):
+        links.append(channels[i].get_attribute("href"))
+    all_channels = list(dict.fromkeys(links))
+    driver.quit()
 
 
 def pytest_run():
-    while True:
+    global test_run
+    while int(len(ChannelCount.all_channels)) < int(channel_changes):
         subprocess.run(['pytest', os.path.join(test_path, 'OnStream_Chrome.py'), '-v', '-s'])
+        test_run += 1
+        ChannelCount.all_channels += ChannelCount.all_channels
 
 
 if __name__ == "__main__":

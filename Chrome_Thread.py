@@ -19,7 +19,6 @@ except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
 version = '1.2.27'
-channel_changes = 100
 
 
 class ChannelCount(object):
@@ -28,8 +27,7 @@ class ChannelCount(object):
     driver = webdriver.Chrome(ChromeDriverManager().install(), desired_capabilities=caps)
     dishtv = "https://test.watchdishtv.com/"
     driver.get(dishtv)
-    WebDriverWait(driver, 30).until(ec.presence_of_element_located(
-        (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+    WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
     WebDriverWait(driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
     WebDriverWait(driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="9491"]')))
     links = []
@@ -61,15 +59,27 @@ class CountRun:
             tr.write(str(self.counter))
 
 
+class ChannelChange:
+    def __init__(self):
+        self.change = 100
+
+    def get_number(self):
+        return self.change
+
+
 mc = CountRun()
+cc = ChannelChange()
 
 
 def pytest_run():
-    while int(len(ChannelCount.all_channels)) < int(channel_changes):
+    channels = ChannelCount.all_channels
+    while int(len(channels)) < int(cc.get_number()):
+        print(len(channels))
         mc.increment()
         mc.save_value()
         subprocess.run(['pytest', os.path.join(test_path, 'OnStream_Chrome.py'), '-v', '-s'])
-        ChannelCount.all_channels += ChannelCount.all_channels
+        channels = ChannelCount.all_channels + channels
+        print(len(channels))
 
 
 if __name__ == "__main__":

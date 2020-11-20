@@ -13,8 +13,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime, timedelta
 from influxdb import InfluxDBClient
-from Chrome_Thread import test_run, version
-from conftest import auto_start
+from Chrome_Thread import version, mc
 
 count = {'loading_screen': 0, 'unable_to_connect': 0, 'error_404': 0, 'element_loading': 0, 'timeout_exception': 0, 'element_not_found': 0}
 
@@ -35,6 +34,44 @@ except KeyError:
     raise
 
 client = InfluxDBClient(host=grafana, port=8086, database='ONSTREAM')
+
+
+@pytest.fixture(scope="session", autouse=True)
+def auto_start(request):
+    test_start = [
+        {
+            "measurement": "Chrome",
+            "tags": {
+                "Software": version,
+            },
+            "time": time.time_ns(),
+            "fields": {
+                "events_title": "test start",
+                "text": "This is the start of test " + mc.get_value() + " on firmware " + version,
+                "tags": "Onstream" + "," + "Chrome" + "," + mc.get_value() + "," + version
+            }
+        }
+    ]
+    client.write_points(test_start)
+
+    def auto_fin():
+        test_end = [
+            {
+                "measurement": "Chrome",
+                "tags": {
+                    "Software": version,
+                },
+                "time": time.time_ns(),
+                "fields": {
+                    "events_title": "test end",
+                    "text": "This is the end of test " + mc.get_value() + " on firmware " + version,
+                    "tags": "Onstream" + "," + "Chrome" + "," + mc.get_value() + "," + version
+                }
+            }
+        ]
+        client.write_points(test_end)
+
+    request.addfinalizer(auto_fin)
 
 
 @pytest.fixture(scope="class")
@@ -113,7 +150,7 @@ class TestHomeScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -137,7 +174,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -153,7 +190,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -169,7 +206,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -185,7 +222,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -201,7 +238,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -235,7 +272,7 @@ class TestHomeScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -259,7 +296,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -275,7 +312,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -291,7 +328,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -307,7 +344,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -323,7 +360,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -356,7 +393,7 @@ class TestHomeScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -380,7 +417,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -396,7 +433,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -412,7 +449,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -428,7 +465,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -444,7 +481,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -474,7 +511,7 @@ class TestHomeScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -498,7 +535,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -514,7 +551,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -530,7 +567,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -546,7 +583,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -562,7 +599,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -601,7 +638,7 @@ class TestHomeScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -625,7 +662,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -641,7 +678,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -657,7 +694,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -673,7 +710,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -689,7 +726,7 @@ class TestHomeScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -724,7 +761,7 @@ class TestGuideScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -748,7 +785,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -764,7 +801,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -780,7 +817,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -796,7 +833,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -812,7 +849,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -840,7 +877,7 @@ class TestGuideScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -864,7 +901,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -880,7 +917,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -896,7 +933,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -912,7 +949,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -928,7 +965,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -955,7 +992,7 @@ class TestGuideScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -979,7 +1016,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -995,7 +1032,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1011,7 +1048,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1027,7 +1064,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1043,7 +1080,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1070,7 +1107,7 @@ class TestGuideScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1094,7 +1131,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1110,7 +1147,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1126,7 +1163,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1142,7 +1179,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1158,7 +1195,7 @@ class TestGuideScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1196,7 +1233,7 @@ class TestSideBarScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1220,7 +1257,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1236,7 +1273,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1252,7 +1289,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1268,7 +1305,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1284,7 +1321,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1314,7 +1351,7 @@ class TestSideBarScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1338,7 +1375,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1354,7 +1391,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1370,7 +1407,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1386,7 +1423,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1402,7 +1439,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1430,7 +1467,7 @@ class TestSideBarScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1454,7 +1491,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1470,7 +1507,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1486,7 +1523,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1502,7 +1539,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1518,7 +1555,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1549,7 +1586,7 @@ class TestSideBarScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1573,7 +1610,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1589,7 +1626,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1605,7 +1642,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1621,7 +1658,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1637,7 +1674,7 @@ class TestSideBarScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1698,7 +1735,7 @@ class TestLiveTV:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1722,7 +1759,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1738,7 +1775,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1754,7 +1791,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1770,7 +1807,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1786,7 +1823,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1822,7 +1859,7 @@ class TestLiveTV:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1846,7 +1883,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1862,7 +1899,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1878,7 +1915,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1894,7 +1931,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1910,7 +1947,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1954,7 +1991,7 @@ class TestLiveTV:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1978,7 +2015,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1994,7 +2031,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2010,7 +2047,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2026,7 +2063,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2042,7 +2079,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2086,7 +2123,7 @@ class TestLiveTV:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2110,7 +2147,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2126,7 +2163,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2142,7 +2179,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2158,7 +2195,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2174,7 +2211,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2234,7 +2271,7 @@ class TestLiveTV:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2258,7 +2295,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2274,7 +2311,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2290,7 +2327,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2306,7 +2343,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2322,7 +2359,7 @@ class TestLiveTV:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2353,7 +2390,7 @@ class TestSupportSettingsScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2377,7 +2414,7 @@ class TestSupportSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2393,7 +2430,7 @@ class TestSupportSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2409,7 +2446,7 @@ class TestSupportSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2425,7 +2462,7 @@ class TestSupportSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2441,7 +2478,7 @@ class TestSupportSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2481,7 +2518,7 @@ class TestSupportSettingsScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2505,7 +2542,7 @@ class TestSupportSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2521,7 +2558,7 @@ class TestSupportSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2537,7 +2574,7 @@ class TestSupportSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2553,7 +2590,7 @@ class TestSupportSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2569,7 +2606,7 @@ class TestSupportSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2598,7 +2635,7 @@ class TestLegalSettingsScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2622,7 +2659,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2638,7 +2675,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2654,7 +2691,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2670,7 +2707,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2686,7 +2723,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2714,7 +2751,7 @@ class TestLegalSettingsScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2738,7 +2775,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2754,7 +2791,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2770,7 +2807,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2786,7 +2823,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2802,7 +2839,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2825,7 +2862,7 @@ class TestLegalSettingsScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2849,7 +2886,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2865,7 +2902,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2881,7 +2918,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2897,7 +2934,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2913,7 +2950,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2942,7 +2979,7 @@ class TestLegalSettingsScreen:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2966,7 +3003,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2982,7 +3019,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2998,7 +3035,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3014,7 +3051,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3030,7 +3067,7 @@ class TestLegalSettingsScreen:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3068,7 +3105,7 @@ class TestServices:
                     "measurement": "Chrome",
                     "tags": {
                         "Software": version,
-                        "Test": test_run,
+                        "Test": mc.get_value(),
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3090,7 +3127,7 @@ class TestServices:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3106,7 +3143,7 @@ class TestServices:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3122,7 +3159,7 @@ class TestServices:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3138,7 +3175,7 @@ class TestServices:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3154,7 +3191,7 @@ class TestServices:
                         "measurement": "Chrome",
                         "tags": {
                             "Software": version,
-                            "Test": test_run,
+                            "Test": mc.get_value(),
                         },
                         "time": time.time_ns(),
                         "fields": {

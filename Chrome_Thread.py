@@ -9,12 +9,16 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 try:
+    base_path = os.environ['ONSTREAM_HOME']
+except KeyError:
+    print('Could not get environment variable "base_path". This is needed for the tests!"')
+    raise
+try:
     test_path = os.environ['ONSTREAM_TEST']
 except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
-test_run = 1
-version = '1.1.15'
+version = '1.2.27'
 channel_changes = 100
 
 
@@ -22,7 +26,7 @@ class ChannelCount(object):
     caps = DesiredCapabilities.CHROME
     caps['goog:loggingPrefs'] = {'performance': 'ALL'}
     driver = webdriver.Chrome(ChromeDriverManager().install(), desired_capabilities=caps)
-    dishtv = "https://watchdishtv.com/"
+    dishtv = "https://test.watchdishtv.com/"
     driver.get(dishtv)
     WebDriverWait(driver, 30).until(ec.presence_of_element_located(
         (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
@@ -36,11 +40,35 @@ class ChannelCount(object):
     driver.quit()
 
 
+class CountRun:
+    def __init__(self):
+        self.counter = 0
+        self.line = 0
+
+    def increment(self):
+        self.counter += 1
+
+    def reset(self):
+        self.counter = 0
+
+    def get_value(self):
+        with open(os.path.join(base_path, 'test_run_num.txt'), 'r') as rt:
+            self.line = str(rt.read())
+        return self.line
+
+    def save_value(self):
+        with open(os.path.join(base_path, 'test_run_num.txt'), 'w+') as tr:
+            tr.write(str(self.counter))
+
+
+mc = CountRun()
+
+
 def pytest_run():
-    global test_run
     while int(len(ChannelCount.all_channels)) < int(channel_changes):
+        mc.increment()
+        mc.save_value()
         subprocess.run(['pytest', os.path.join(test_path, 'OnStream_Chrome.py'), '-v', '-s'])
-        test_run += 1
         ChannelCount.all_channels += ChannelCount.all_channels
 
 

@@ -28,6 +28,11 @@ except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
 try:
+    picture_path = os.environ['ONSTREAM_PICTURES']
+except KeyError:
+    print('Could not get environment variable "test_path". This is needed for the tests!"')
+    raise
+try:
     grafana = os.environ['GRAFANA']
 except KeyError:
     print('Could not get environment variable "grafana". This is needed for the tests!"')
@@ -78,7 +83,7 @@ def auto_start(request):
 def directory(request):
     name = os.environ.get('PYTEST_CURRENT_TEST')
     """.split(':')[-1].split(' ')[0]"""
-    direct = os.path.join(base_path, "/", "Pictures")
+    direct = os.path.join(picture_path) + "/"
     request.cls.direct = direct
     request.cls.name = name
     yield

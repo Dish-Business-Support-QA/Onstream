@@ -61,7 +61,7 @@ class CountRun:
 
 class ChannelChange:
     def __init__(self):
-        self.change = 50
+        self.change = 40
 
     def get_number(self):
         return self.change
@@ -74,12 +74,10 @@ cc = ChannelChange()
 def pytest_run():
     channels = ChannelCount.all_channels
     while int(len(channels)) < int(cc.get_number()):
-        print(len(channels))
         mc.increment()
         mc.save_value()
-        subprocess.run(['pytest', os.path.join(test_path, 'OnStream_Chrome.py'), '-sv', '–influxdb-pytest'])
+        subprocess.run(['pytest', '--pytest-influxdb', '--influxdb_project=Chrome', '--influxdb_run_id=' + str(mc.get_value()), os.path.join(test_path, 'OnStream_Chrome.py'), '-sv'])
         channels = ChannelCount.all_channels + channels
-        print(len(channels))
 
 
 if __name__ == "__main__":

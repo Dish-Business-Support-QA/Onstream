@@ -2,6 +2,7 @@ import os
 import pytest
 import json
 import time
+import subprocess
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, JavascriptException
@@ -16,6 +17,7 @@ from influxdb import InfluxDBClient
 from Chrome_Thread import version, mc
 
 count = {'loading_screen': 0, 'unable_to_connect': 0, 'error_404': 0, 'element_loading': 0, 'timeout_exception': 0, 'element_not_found': 0}
+testrun = '1.0.1'
 
 try:
     base_path = os.environ['ONSTREAM_HOME']
@@ -75,6 +77,8 @@ def auto_start(request):
             }
         ]
         client.write_points(test_end)
+        subprocess.run(['python3', 'MoveFiles.py'])
+        subprocess.run(['python3', 'ClearFolders.py'])
 
     request.addfinalizer(auto_fin)
 
@@ -3208,10 +3212,9 @@ class TestServices:
                 assert False, "timeout error"
 
 
-class TestCount:
-    def test_count(self):
-        global count
-        errors = open(os.path.join(base_path, 'error_count.txt'), 'a+')
-        with errors as file:
-            file.write(json.dumps(count))
-        print(count)
+@pytest.mark.usefixtures("setup")
+class TestLog:
+    def test_log(self):
+        with open('/Users/dishbusiness/Desktop/OnStreamTestFiles/Duration/Time_Log.json', 'a+') as t:
+            for entry in self.driver.get_log('performance'):
+                json.dump(entry, t, ensure_ascii=False, indent=4)

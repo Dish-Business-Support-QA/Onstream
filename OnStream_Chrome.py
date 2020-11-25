@@ -3106,7 +3106,7 @@ class TestServices:
                 self.driver.refresh()
                 WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
                     (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
-                time.sleep(10)
+                time.sleep(60)
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [

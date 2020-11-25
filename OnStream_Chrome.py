@@ -101,7 +101,7 @@ def setup(request):
     dishtv = "https://test.watchdishtv.com/"
     driver.get(dishtv)
     driver.maximize_window()
-    logo = "SUNY DOWNSTATE SCHOOL NAME"  # Big logo on home screen
+    logo = "DaVita Logo"  # Big logo on home screen
     src = driver.page_source
     request.cls.driver = driver
     request.cls.src = src

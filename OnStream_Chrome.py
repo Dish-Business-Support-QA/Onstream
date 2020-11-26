@@ -16,8 +16,8 @@ from datetime import datetime, timedelta
 from influxdb import InfluxDBClient
 from Chrome_Thread import version, mc
 
-count = {'loading_screen': 0, 'unable_to_connect': 0, 'error_404': 0, 'element_loading': 0, 'timeout_exception': 0, 'element_not_found': 0}
-testrun = '1.0.1'
+count = {'loading_screen': 0, 'unable_to_connect': 0, 'error_404': 0, 'element_loading': 0, 'timeout_exception': 0, 'element_not_found': 0, 'went_wrong': 0}
+testrun = '1.0.2'
 
 try:
     base_path = os.environ['ONSTREAM_HOME']
@@ -177,6 +177,7 @@ class TestHomeScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -241,6 +242,22 @@ class TestHomeScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -299,6 +316,7 @@ class TestHomeScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -363,6 +381,22 @@ class TestHomeScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -420,6 +454,7 @@ class TestHomeScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -484,6 +519,22 @@ class TestHomeScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -538,6 +589,7 @@ class TestHomeScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -602,6 +654,22 @@ class TestHomeScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -665,6 +733,7 @@ class TestHomeScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -729,6 +798,22 @@ class TestHomeScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -788,6 +873,7 @@ class TestGuideScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -852,6 +938,22 @@ class TestGuideScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -904,6 +1006,7 @@ class TestGuideScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -968,6 +1071,22 @@ class TestGuideScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -1019,6 +1138,7 @@ class TestGuideScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -1083,6 +1203,22 @@ class TestGuideScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -1134,6 +1270,7 @@ class TestGuideScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -1198,6 +1335,22 @@ class TestGuideScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -1260,6 +1413,7 @@ class TestSideBarScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -1324,6 +1478,22 @@ class TestSideBarScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -1378,6 +1548,7 @@ class TestSideBarScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -1442,6 +1613,22 @@ class TestSideBarScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -1494,6 +1681,7 @@ class TestSideBarScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -1558,6 +1746,22 @@ class TestSideBarScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -1613,6 +1817,7 @@ class TestSideBarScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -1677,6 +1882,22 @@ class TestSideBarScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -1762,6 +1983,7 @@ class TestLiveTV:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -1826,6 +2048,22 @@ class TestLiveTV:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -1886,6 +2124,7 @@ class TestLiveTV:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -1950,6 +2189,22 @@ class TestLiveTV:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -2018,6 +2273,7 @@ class TestLiveTV:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -2082,6 +2338,22 @@ class TestLiveTV:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -2150,6 +2422,7 @@ class TestLiveTV:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -2214,6 +2487,22 @@ class TestLiveTV:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -2298,6 +2587,7 @@ class TestLiveTV:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -2362,6 +2652,22 @@ class TestLiveTV:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -2417,6 +2723,7 @@ class TestSupportSettingsScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -2481,6 +2788,22 @@ class TestSupportSettingsScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -2545,6 +2868,7 @@ class TestSupportSettingsScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -2609,6 +2933,22 @@ class TestSupportSettingsScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -2662,6 +3002,7 @@ class TestLegalSettingsScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -2726,6 +3067,22 @@ class TestLegalSettingsScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -2778,6 +3135,7 @@ class TestLegalSettingsScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -2842,6 +3200,22 @@ class TestLegalSettingsScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -2889,6 +3263,7 @@ class TestLegalSettingsScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -2953,6 +3328,22 @@ class TestLegalSettingsScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -3006,6 +3397,7 @@ class TestLegalSettingsScreen:
                 '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -3070,6 +3462,22 @@ class TestLegalSettingsScreen:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {
@@ -3095,18 +3503,22 @@ class TestServices:
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
             WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
-            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="9491"]')))
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//img[@alt="9491"]')))
             links = []
             channels = self.driver.find_elements_by_xpath('(//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"])')
             for i in range(len(channels)):
                 links.append(channels[i].get_attribute("href"))
             all_channels = list(dict.fromkeys(links))
             for link in all_channels:
+                channel = link.strip().split('/')[5]
                 self.driver.get(link)
                 self.driver.refresh()
-                WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
+                WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located(
                     (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
-                time.sleep(60)
+                WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                    (By.XPATH, '//div[@class="bitmovinplayer-poster"]')))
+                time.sleep(5)
+                self.driver.save_screenshot(self.direct + str(channel) + ".png")
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
@@ -3130,6 +3542,7 @@ class TestServices:
             no_streaming = self.driver.find_elements_by_xpath('//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -3194,6 +3607,22 @@ class TestServices:
                 ]
                 client.write_points(body)
                 assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
             else:
                 body = [
                     {

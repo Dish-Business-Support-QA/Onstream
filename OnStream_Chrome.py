@@ -16,8 +16,7 @@ from datetime import datetime, timedelta
 from influxdb import InfluxDBClient
 from Chrome_Thread import version, mc
 
-count = {'loading_screen': 0, 'unable_to_connect': 0, 'error_404': 0, 'element_loading': 0, 'timeout_exception': 0, 'element_not_found': 0, 'went_wrong': 0}
-testrun = '1.0.2'
+testrun = '1.0.3'
 
 try:
     base_path = os.environ['ONSTREAM_HOME']
@@ -98,7 +97,7 @@ def setup(request):
     caps = DesiredCapabilities.CHROME
     caps['goog:loggingPrefs'] = {'performance': 'ALL'}
     driver = webdriver.Chrome(ChromeDriverManager().install(), desired_capabilities=caps)
-    dishtv = "https://test.watchdishtv.com/"
+    dishtv = "https://watchdishtv.com/"
     driver.get(dishtv)
     driver.maximize_window()
     logo = "DaVita Logo"  # Big logo on home screen
@@ -133,9 +132,152 @@ def now_time(request):
 
 
 @pytest.mark.usefixtures("setup", "directory")
+class TestVersion:
+    def test_version(self):
+        try:
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+            self.driver.find_element_by_xpath('//a[@role="button"]').click()
+            self.driver.find_element_by_xpath('//a[@class="_1jBpd9Hw7kDuuvGVNTNlax schema_accent_background_hover"]').click()
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
+                (By.XPATH, '//div[@class="_1sd7usVW7fcyKBYM7qUANM"]')))
+            v = self.driver.find_element_by_xpath('//p[@class="_2G-12UYHfG0a2MlL0pEXtD"]')
+            v = v.text.split(':')[1].strip()
+            assert version == v
+        except NoSuchElementException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            body = [
+                {
+                    "measurement": "Chrome",
+                    "tags": {
+                        "Software": version,
+                        "Test": mc.get_value(),
+                        "Pytest": self.name,
+                    },
+                    "time": time.time_ns(),
+                    "fields": {
+                        "element_not_found": 1,
+                    }
+                }
+            ]
+            client.write_points(body)
+            assert False, "Element was not found"
+        except TimeoutException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            loading_circle = self.driver.find_elements_by_xpath(
+                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements_by_xpath(
+                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements_by_xpath('//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements_by_xpath('//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_element_by_xpath('//h2[contains(text(), "Something went wrong with the stream.")]')
+            if len(loading_circle) > 0:
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "loading_circle": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck on loading screen"
+            elif len(no_streaming) > 0:
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "unable_to_connect": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "It appears that you are not able to connect to Streaming Services at this time."
+            elif len(error_404) > 0:
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "error_404": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "404 error"
+            elif len(loading_element):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "element_loading": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
+            else:
+                body = [
+                    {
+                        "measurement": "Chrome",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "timeout_exception": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "timeout error"
+
+
+@pytest.mark.usefixtures("setup", "directory")
 class TestHomeScreen:
     def test_images_displayed(self):
-        global count
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
                 (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]')))
@@ -160,6 +302,7 @@ class TestHomeScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -185,6 +328,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -201,6 +345,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -217,6 +362,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -233,6 +379,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -249,6 +396,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -265,6 +413,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -276,7 +425,7 @@ class TestHomeScreen:
                 assert False, "timeout error"
 
     def test_buttons_displayed(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//a[contains(@href,"home")]').is_displayed()  # home
             self.driver.find_element_by_xpath('//a[contains(@href,"epg")]').is_displayed()  # guide
@@ -299,6 +448,7 @@ class TestHomeScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -324,6 +474,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -340,6 +491,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -356,6 +508,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -372,6 +525,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -388,6 +542,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -404,6 +559,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -415,7 +571,7 @@ class TestHomeScreen:
                 assert False, "timeout error"
 
     def test_buttons_enabled(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//a[contains(@href,"home")]').is_enabled()  # home
             self.driver.find_element_by_xpath('//a[contains(@href,"epg")]').is_enabled()  # guide
@@ -437,6 +593,7 @@ class TestHomeScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -462,6 +619,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -478,6 +636,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -494,6 +653,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -510,6 +670,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -526,6 +687,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -542,6 +704,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -553,7 +716,7 @@ class TestHomeScreen:
                 assert False, "timeout error"
 
     def test_text_displayed(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//span[contains(text(), "Home")]')  # home
             self.driver.find_element_by_xpath('//span[contains(text(), "TV Guide")]')  # guide
@@ -572,6 +735,7 @@ class TestHomeScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -597,6 +761,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -613,6 +778,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -629,6 +795,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -645,6 +812,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -661,6 +829,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -677,6 +846,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -688,7 +858,7 @@ class TestHomeScreen:
                 assert False, "timeout error"
 
     def test_link_clickable(self):
-        global count
+         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
                 (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 null"]'))).click()  # learn more
@@ -716,6 +886,7 @@ class TestHomeScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -741,6 +912,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -757,6 +929,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -773,6 +946,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -789,6 +963,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -805,6 +980,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -821,6 +997,7 @@ class TestHomeScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -835,7 +1012,7 @@ class TestHomeScreen:
 @pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestGuideScreen:
     def test_images_displayed(self):
-        global count
+         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
                 (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
@@ -856,6 +1033,7 @@ class TestGuideScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -881,6 +1059,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -897,6 +1076,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -913,6 +1093,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -929,6 +1110,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -945,6 +1127,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -961,6 +1144,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -972,7 +1156,7 @@ class TestGuideScreen:
                 assert False, "timeout error"
 
     def test_text_displayed(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//div[@class="_1AhFoq9LRVrQE0BrdpGozJ schema_epgTimelineColors_background"]').is_displayed()  # TODAY
             self.driver.find_element_by_xpath('//div[contains(text(), "%s")]' % self.now).is_displayed()  # Time 1
@@ -989,6 +1173,7 @@ class TestGuideScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1014,6 +1199,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1030,6 +1216,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1046,6 +1233,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1062,6 +1250,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1078,6 +1267,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1094,6 +1284,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1105,7 +1296,7 @@ class TestGuideScreen:
                 assert False, "timeout error"
 
     def test_buttons_displayed(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_displayed()  # right arrow
             self.driver.find_element_by_xpath('//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]').is_displayed()  # play button
@@ -1121,6 +1312,7 @@ class TestGuideScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1146,6 +1338,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1162,6 +1355,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1178,6 +1372,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1194,6 +1389,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1210,6 +1406,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1226,6 +1423,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1237,7 +1435,7 @@ class TestGuideScreen:
                 assert False, "timeout error"
 
     def test_buttons_clickable(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_enabled()  # right arrow
             self.driver.find_element_by_xpath('//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]').is_enabled()  # play button
@@ -1253,6 +1451,7 @@ class TestGuideScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1278,6 +1477,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1294,6 +1494,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1310,6 +1511,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1342,6 +1544,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1358,6 +1561,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1372,7 +1576,7 @@ class TestGuideScreen:
 @pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestSideBarScreen:
     def test_images_displayed(self):
-        global count
+         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
             WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="9491"]')))
@@ -1396,6 +1600,7 @@ class TestSideBarScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1421,6 +1626,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1437,6 +1643,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1453,6 +1660,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1469,6 +1677,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1485,6 +1694,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1501,6 +1711,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1512,7 +1723,7 @@ class TestSideBarScreen:
                 assert False, "timeout error"
 
     def test_text_displayed(self):
-        global count
+         
         try:
             """self.driver.find_element_by_xpath('//div[@class="_1JoT790R-w1p_Jv3yX7LrI"]').is_displayed()  # channel name"""
             self.driver.find_element_by_xpath('//div[@class="QJgwfXrH2X5_BIUd7kMnu"]').is_displayed()
@@ -1531,6 +1742,7 @@ class TestSideBarScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1556,6 +1768,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1572,6 +1785,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1588,6 +1802,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1604,6 +1819,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1620,6 +1836,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1636,6 +1853,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1647,7 +1865,7 @@ class TestSideBarScreen:
                 assert False, "timeout error"
 
     def test_buttons_displayed(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]').is_displayed()
             # exit button
@@ -1664,6 +1882,7 @@ class TestSideBarScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1689,6 +1908,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1705,6 +1925,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1721,6 +1942,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1737,6 +1959,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1753,6 +1976,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1769,6 +1993,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1780,7 +2005,7 @@ class TestSideBarScreen:
                 assert False, "timeout error"
 
     def test_buttons_clickable(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]').is_enabled()
             # exit button
@@ -1800,6 +2025,7 @@ class TestSideBarScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1825,6 +2051,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1841,6 +2068,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1857,6 +2085,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1873,6 +2102,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1889,6 +2119,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1905,6 +2136,7 @@ class TestSideBarScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1919,7 +2151,7 @@ class TestSideBarScreen:
 @pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestLiveTV:
     def test_images_displayed(self):
-        global count
+         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
             WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="9491"]')))
@@ -1966,6 +2198,7 @@ class TestLiveTV:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1991,6 +2224,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2007,6 +2241,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2023,6 +2258,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2039,6 +2275,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2055,6 +2292,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2071,6 +2309,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2082,7 +2321,7 @@ class TestLiveTV:
                 assert False, "timeout error"
 
     def test_text_displayed(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//div[@class="_1AhFoq9LRVrQE0BrdpGozJ schema_epgTimelineColors_background"]').is_displayed()  # TODAY
             self.driver.find_element_by_xpath('//div[contains(text(), "%s")]' % self.now).is_displayed()  # Time 1
@@ -2107,6 +2346,7 @@ class TestLiveTV:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2132,6 +2372,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2148,6 +2389,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2164,6 +2406,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2180,6 +2423,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2196,6 +2440,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2212,6 +2457,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2223,7 +2469,7 @@ class TestLiveTV:
                 assert False, "timeout error"
 
     def test_buttons_displayed(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//div[@class="bmpui-ui-container bmpui-fullTvGuideIcon"]').is_displayed()
             # Full TV Guide back button
@@ -2256,6 +2502,7 @@ class TestLiveTV:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2281,6 +2528,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2297,6 +2545,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2313,6 +2562,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2329,6 +2579,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2345,6 +2596,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2361,6 +2613,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2372,7 +2625,7 @@ class TestLiveTV:
                 assert False, "timeout error"
 
     def test_buttons_enabled(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//div[@class="bmpui-ui-container bmpui-fullTvGuideIcon"]').is_enabled()
             # Full TV Guide back button
@@ -2405,6 +2658,7 @@ class TestLiveTV:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2430,6 +2684,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2446,6 +2701,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2462,6 +2718,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2478,6 +2735,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2494,6 +2752,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2510,6 +2769,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2521,7 +2781,7 @@ class TestLiveTV:
                 assert False, "timeout error"
 
     def test_control_bar_functions(self):
-        global count
+         
         try:
             #  turn mute button off and on
             self.driver.find_element_by_xpath('//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').click()
@@ -2570,6 +2830,7 @@ class TestLiveTV:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2595,6 +2856,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2611,6 +2873,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2627,6 +2890,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2643,6 +2907,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2659,6 +2924,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2675,6 +2941,7 @@ class TestLiveTV:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2689,7 +2956,7 @@ class TestLiveTV:
 @pytest.mark.usefixtures("setup", "directory")
 class TestSupportSettingsScreen:
     def test_images_displayed(self):
-        global count
+         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
                 (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
@@ -2706,6 +2973,7 @@ class TestSupportSettingsScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2731,6 +2999,7 @@ class TestSupportSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2747,6 +3016,7 @@ class TestSupportSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2763,6 +3033,7 @@ class TestSupportSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2779,6 +3050,7 @@ class TestSupportSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2795,6 +3067,7 @@ class TestSupportSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2811,6 +3084,7 @@ class TestSupportSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2822,7 +3096,7 @@ class TestSupportSettingsScreen:
                 assert False, "timeout error"
 
     def test_text_displayed(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//h2[contains(text(), "Frequently Asked Questions")]').is_displayed()  # Freq asked questions
             WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//p[contains(text(), "How can I watch OnStream?")]')))
@@ -2851,6 +3125,7 @@ class TestSupportSettingsScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2876,6 +3151,7 @@ class TestSupportSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2892,6 +3168,7 @@ class TestSupportSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2908,6 +3185,7 @@ class TestSupportSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2924,6 +3202,7 @@ class TestSupportSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2940,6 +3219,7 @@ class TestSupportSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2956,6 +3236,7 @@ class TestSupportSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2970,7 +3251,7 @@ class TestSupportSettingsScreen:
 @pytest.mark.usefixtures("setup", "directory")
 class TestLegalSettingsScreen:
     def test_images_displayed(self):
-        global count
+         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
             self.driver.find_element_by_xpath('//a[@role="button"]').click()
@@ -2985,6 +3266,7 @@ class TestLegalSettingsScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3010,6 +3292,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3026,6 +3309,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3042,6 +3326,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3058,6 +3343,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3074,6 +3360,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3090,6 +3377,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3101,7 +3389,7 @@ class TestLegalSettingsScreen:
                 assert False, "timeout error"
 
     def test_text_displayed(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//h2[contains(text(), "Legal")]').is_displayed()  # Legal
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//h4[contains(text(), "Service Agreement")]')))
@@ -3118,6 +3406,7 @@ class TestLegalSettingsScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3143,6 +3432,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3159,6 +3449,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3175,6 +3466,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3191,6 +3483,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3207,6 +3500,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3223,6 +3517,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3234,7 +3529,7 @@ class TestLegalSettingsScreen:
                 assert False, "timeout error"
 
     def test_link1_clickable(self):
-        global count
+         
         try:
             self.driver.find_element_by_xpath('//a[@href="https://www.dish.com/service-agreements/"]').click()
             self.driver.find_element_by_xpath('//h1[contains(text(), "DISH Network Service Agreements")]').is_displayed()
@@ -3246,6 +3541,7 @@ class TestLegalSettingsScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3271,6 +3567,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3287,6 +3584,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3303,6 +3601,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3319,6 +3618,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3335,6 +3635,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3351,6 +3652,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3362,7 +3664,7 @@ class TestLegalSettingsScreen:
                 assert False, "timeout error"
 
     def test_link2_clickable(self):
-        global count
+         
         try:
             self.driver.get(self.dishtv)
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
@@ -3380,6 +3682,7 @@ class TestLegalSettingsScreen:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3405,6 +3708,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3421,6 +3725,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3437,6 +3742,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3453,6 +3759,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3469,6 +3776,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3485,6 +3793,7 @@ class TestLegalSettingsScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3499,7 +3808,7 @@ class TestLegalSettingsScreen:
 @pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestServices:
     def test_services_configured(self):
-        global count
+         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
             WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
@@ -3527,6 +3836,7 @@ class TestServices:
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
+                        "Pytest": self.name,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3550,6 +3860,7 @@ class TestServices:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3566,6 +3877,7 @@ class TestServices:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3582,6 +3894,7 @@ class TestServices:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3598,6 +3911,7 @@ class TestServices:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3614,6 +3928,7 @@ class TestServices:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3630,6 +3945,7 @@ class TestServices:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "Pytest": self.name,
                         },
                         "time": time.time_ns(),
                         "fields": {

@@ -14,7 +14,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime, timedelta
 from influxdb import InfluxDBClient
-from Chrome_Thread import version, mc
+from Chrome_Thread import version, mc, ChannelCount
 
 testrun = '1.0.3'
 
@@ -49,12 +49,14 @@ def auto_start(request):
             "measurement": "Chrome",
             "tags": {
                 "Software": version,
+                "Test": mc.get_value(),
+                "URL": ChannelCount.dishtv,
             },
             "time": time.time_ns(),
             "fields": {
                 "events_title": "test start",
-                "text": "This is the start of test " + mc.get_value() + " on firmware " + version,
-                "tags": "Onstream" + "," + "Chrome" + "," + mc.get_value() + "," + version
+                "text": "This is the start of test " + mc.get_value() + " on firmware " + version + " tested on " + ChannelCount.dishtv,
+                "tags": "Onstream" + "," + "Chrome" + "," + mc.get_value() + "," + version + "," + ChannelCount.dishtv
             }
         }
     ]
@@ -66,12 +68,14 @@ def auto_start(request):
                 "measurement": "Chrome",
                 "tags": {
                     "Software": version,
+                    "Test": mc.get_value(),
+                    "URL": ChannelCount.dishtv,
                 },
                 "time": time.time_ns(),
                 "fields": {
                     "events_title": "test end",
-                    "text": "This is the end of test " + mc.get_value() + " on firmware " + version,
-                    "tags": "Onstream" + "," + "Chrome" + "," + mc.get_value() + "," + version
+                    "text": "This is the end of test " + mc.get_value() + " on firmware " + version + " tested on " + ChannelCount.dishtv,
+                    "tags": "Onstream" + "," + "Chrome" + "," + mc.get_value() + "," + version + "," + ChannelCount.dishtv
                 }
             }
         ]
@@ -97,7 +101,7 @@ def setup(request):
     caps = DesiredCapabilities.CHROME
     caps['goog:loggingPrefs'] = {'performance': 'ALL'}
     driver = webdriver.Chrome(ChromeDriverManager().install(), desired_capabilities=caps)
-    dishtv = "https://watchdishtv.com/"
+    dishtv = ChannelCount.dishtv
     driver.get(dishtv)
     driver.maximize_window()
     logo = "DaVita Logo"  # Big logo on home screen
@@ -153,6 +157,7 @@ class TestVersion:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -179,6 +184,7 @@ class TestVersion:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -196,6 +202,7 @@ class TestVersion:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -213,6 +220,7 @@ class TestVersion:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -230,6 +238,7 @@ class TestVersion:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -247,6 +256,7 @@ class TestVersion:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -264,6 +274,7 @@ class TestVersion:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -303,6 +314,7 @@ class TestHomeScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -329,6 +341,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -346,6 +359,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -363,6 +377,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -380,6 +395,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -397,6 +413,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -414,6 +431,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -425,7 +443,6 @@ class TestHomeScreen:
                 assert False, "timeout error"
 
     def test_buttons_displayed(self):
-         
         try:
             self.driver.find_element_by_xpath('//a[contains(@href,"home")]').is_displayed()  # home
             self.driver.find_element_by_xpath('//a[contains(@href,"epg")]').is_displayed()  # guide
@@ -449,6 +466,7 @@ class TestHomeScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -475,6 +493,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -492,6 +511,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -509,6 +529,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -526,6 +547,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -543,6 +565,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -560,6 +583,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -571,7 +595,6 @@ class TestHomeScreen:
                 assert False, "timeout error"
 
     def test_buttons_enabled(self):
-         
         try:
             self.driver.find_element_by_xpath('//a[contains(@href,"home")]').is_enabled()  # home
             self.driver.find_element_by_xpath('//a[contains(@href,"epg")]').is_enabled()  # guide
@@ -594,6 +617,7 @@ class TestHomeScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -620,6 +644,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -637,6 +662,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -654,6 +680,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -671,6 +698,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -688,6 +716,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -705,6 +734,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -716,7 +746,6 @@ class TestHomeScreen:
                 assert False, "timeout error"
 
     def test_text_displayed(self):
-         
         try:
             self.driver.find_element_by_xpath('//span[contains(text(), "Home")]')  # home
             self.driver.find_element_by_xpath('//span[contains(text(), "TV Guide")]')  # guide
@@ -736,6 +765,7 @@ class TestHomeScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -762,6 +792,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -779,6 +810,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -796,6 +828,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -813,6 +846,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -830,6 +864,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -847,6 +882,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -858,7 +894,6 @@ class TestHomeScreen:
                 assert False, "timeout error"
 
     def test_link_clickable(self):
-         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
                 (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 null"]'))).click()  # learn more
@@ -887,6 +922,7 @@ class TestHomeScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -913,6 +949,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -930,6 +967,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -947,6 +985,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -964,6 +1003,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -981,6 +1021,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -998,6 +1039,7 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1012,7 +1054,6 @@ class TestHomeScreen:
 @pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestGuideScreen:
     def test_images_displayed(self):
-         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
                 (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
@@ -1034,6 +1075,7 @@ class TestGuideScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1060,6 +1102,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1077,6 +1120,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1094,6 +1138,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1111,6 +1156,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1128,6 +1174,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1145,6 +1192,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1156,7 +1204,6 @@ class TestGuideScreen:
                 assert False, "timeout error"
 
     def test_text_displayed(self):
-         
         try:
             self.driver.find_element_by_xpath('//div[@class="_1AhFoq9LRVrQE0BrdpGozJ schema_epgTimelineColors_background"]').is_displayed()  # TODAY
             self.driver.find_element_by_xpath('//div[contains(text(), "%s")]' % self.now).is_displayed()  # Time 1
@@ -1174,6 +1221,7 @@ class TestGuideScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1200,6 +1248,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1217,6 +1266,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1234,6 +1284,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1251,6 +1302,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1268,6 +1320,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1285,6 +1338,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1296,7 +1350,6 @@ class TestGuideScreen:
                 assert False, "timeout error"
 
     def test_buttons_displayed(self):
-         
         try:
             self.driver.find_element_by_xpath('//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_displayed()  # right arrow
             self.driver.find_element_by_xpath('//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]').is_displayed()  # play button
@@ -1313,6 +1366,7 @@ class TestGuideScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1339,6 +1393,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1356,6 +1411,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1373,6 +1429,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1390,6 +1447,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1407,6 +1465,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1424,6 +1483,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1435,7 +1495,6 @@ class TestGuideScreen:
                 assert False, "timeout error"
 
     def test_buttons_clickable(self):
-         
         try:
             self.driver.find_element_by_xpath('//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_enabled()  # right arrow
             self.driver.find_element_by_xpath('//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]').is_enabled()  # play button
@@ -1452,6 +1511,7 @@ class TestGuideScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1478,6 +1538,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1495,6 +1556,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1512,6 +1574,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1528,6 +1591,7 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1545,6 +1609,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1562,6 +1627,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1576,7 +1642,6 @@ class TestGuideScreen:
 @pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestSideBarScreen:
     def test_images_displayed(self):
-         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
             WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="9491"]')))
@@ -1601,6 +1666,7 @@ class TestSideBarScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1627,6 +1693,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1644,6 +1711,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1661,6 +1729,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1678,6 +1747,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1695,6 +1765,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1712,6 +1783,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1723,7 +1795,6 @@ class TestSideBarScreen:
                 assert False, "timeout error"
 
     def test_text_displayed(self):
-         
         try:
             """self.driver.find_element_by_xpath('//div[@class="_1JoT790R-w1p_Jv3yX7LrI"]').is_displayed()  # channel name"""
             self.driver.find_element_by_xpath('//div[@class="QJgwfXrH2X5_BIUd7kMnu"]').is_displayed()
@@ -1743,6 +1814,7 @@ class TestSideBarScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1769,6 +1841,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1786,6 +1859,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1803,6 +1877,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1820,6 +1895,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1837,6 +1913,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1854,6 +1931,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1865,7 +1943,6 @@ class TestSideBarScreen:
                 assert False, "timeout error"
 
     def test_buttons_displayed(self):
-         
         try:
             self.driver.find_element_by_xpath('//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]').is_displayed()
             # exit button
@@ -1883,6 +1960,7 @@ class TestSideBarScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1909,6 +1987,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1926,6 +2005,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1943,6 +2023,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1960,6 +2041,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1977,6 +2059,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1994,6 +2077,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2005,7 +2089,6 @@ class TestSideBarScreen:
                 assert False, "timeout error"
 
     def test_buttons_clickable(self):
-         
         try:
             self.driver.find_element_by_xpath('//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]').is_enabled()
             # exit button
@@ -2026,6 +2109,7 @@ class TestSideBarScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2052,6 +2136,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2069,6 +2154,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2086,6 +2172,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2103,6 +2190,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2120,6 +2208,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2137,6 +2226,7 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2151,7 +2241,6 @@ class TestSideBarScreen:
 @pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestLiveTV:
     def test_images_displayed(self):
-         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
             WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="9491"]')))
@@ -2199,6 +2288,7 @@ class TestLiveTV:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2225,6 +2315,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2242,6 +2333,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2259,6 +2351,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2276,6 +2369,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2293,6 +2387,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2310,6 +2405,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2321,7 +2417,6 @@ class TestLiveTV:
                 assert False, "timeout error"
 
     def test_text_displayed(self):
-         
         try:
             self.driver.find_element_by_xpath('//div[@class="_1AhFoq9LRVrQE0BrdpGozJ schema_epgTimelineColors_background"]').is_displayed()  # TODAY
             self.driver.find_element_by_xpath('//div[contains(text(), "%s")]' % self.now).is_displayed()  # Time 1
@@ -2347,6 +2442,7 @@ class TestLiveTV:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2373,6 +2469,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2390,6 +2487,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2407,6 +2505,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2424,6 +2523,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2441,6 +2541,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2458,6 +2559,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2469,7 +2571,6 @@ class TestLiveTV:
                 assert False, "timeout error"
 
     def test_buttons_displayed(self):
-         
         try:
             self.driver.find_element_by_xpath('//div[@class="bmpui-ui-container bmpui-fullTvGuideIcon"]').is_displayed()
             # Full TV Guide back button
@@ -2503,6 +2604,7 @@ class TestLiveTV:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2529,6 +2631,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2546,6 +2649,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2563,6 +2667,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2580,6 +2685,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2597,6 +2703,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2614,6 +2721,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2625,7 +2733,6 @@ class TestLiveTV:
                 assert False, "timeout error"
 
     def test_buttons_enabled(self):
-         
         try:
             self.driver.find_element_by_xpath('//div[@class="bmpui-ui-container bmpui-fullTvGuideIcon"]').is_enabled()
             # Full TV Guide back button
@@ -2659,6 +2766,7 @@ class TestLiveTV:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2685,6 +2793,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2702,6 +2811,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2719,6 +2829,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2736,6 +2847,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2753,6 +2865,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2770,6 +2883,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2781,7 +2895,6 @@ class TestLiveTV:
                 assert False, "timeout error"
 
     def test_control_bar_functions(self):
-         
         try:
             #  turn mute button off and on
             self.driver.find_element_by_xpath('//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').click()
@@ -2831,6 +2944,7 @@ class TestLiveTV:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2857,6 +2971,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2874,6 +2989,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2891,6 +3007,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2908,6 +3025,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2925,6 +3043,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2942,6 +3061,7 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2956,7 +3076,6 @@ class TestLiveTV:
 @pytest.mark.usefixtures("setup", "directory")
 class TestSupportSettingsScreen:
     def test_images_displayed(self):
-         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
                 (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
@@ -2974,6 +3093,7 @@ class TestSupportSettingsScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3000,6 +3120,7 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3017,6 +3138,7 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3034,6 +3156,7 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3051,6 +3174,7 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3068,6 +3192,7 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3085,6 +3210,7 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3096,7 +3222,6 @@ class TestSupportSettingsScreen:
                 assert False, "timeout error"
 
     def test_text_displayed(self):
-         
         try:
             self.driver.find_element_by_xpath('//h2[contains(text(), "Frequently Asked Questions")]').is_displayed()  # Freq asked questions
             WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//p[contains(text(), "How can I watch OnStream?")]')))
@@ -3126,6 +3251,7 @@ class TestSupportSettingsScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3152,6 +3278,7 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3169,6 +3296,7 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3186,6 +3314,7 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3203,6 +3332,7 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3220,6 +3350,7 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3237,6 +3368,7 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3251,7 +3383,6 @@ class TestSupportSettingsScreen:
 @pytest.mark.usefixtures("setup", "directory")
 class TestLegalSettingsScreen:
     def test_images_displayed(self):
-         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
             self.driver.find_element_by_xpath('//a[@role="button"]').click()
@@ -3267,6 +3398,7 @@ class TestLegalSettingsScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3293,6 +3425,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3310,6 +3443,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3327,6 +3461,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3344,6 +3479,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3361,6 +3497,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3378,6 +3515,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3389,7 +3527,6 @@ class TestLegalSettingsScreen:
                 assert False, "timeout error"
 
     def test_text_displayed(self):
-         
         try:
             self.driver.find_element_by_xpath('//h2[contains(text(), "Legal")]').is_displayed()  # Legal
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//h4[contains(text(), "Service Agreement")]')))
@@ -3407,6 +3544,7 @@ class TestLegalSettingsScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3433,6 +3571,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3450,6 +3589,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3467,6 +3607,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3484,6 +3625,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3501,6 +3643,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3518,6 +3661,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3529,7 +3673,6 @@ class TestLegalSettingsScreen:
                 assert False, "timeout error"
 
     def test_link1_clickable(self):
-         
         try:
             self.driver.find_element_by_xpath('//a[@href="https://www.dish.com/service-agreements/"]').click()
             self.driver.find_element_by_xpath('//h1[contains(text(), "DISH Network Service Agreements")]').is_displayed()
@@ -3542,6 +3685,7 @@ class TestLegalSettingsScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3568,6 +3712,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3585,6 +3730,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3602,6 +3748,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3619,6 +3766,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3636,6 +3784,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3653,6 +3802,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3664,7 +3814,6 @@ class TestLegalSettingsScreen:
                 assert False, "timeout error"
 
     def test_link2_clickable(self):
-         
         try:
             self.driver.get(self.dishtv)
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
@@ -3683,6 +3832,7 @@ class TestLegalSettingsScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3709,6 +3859,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3726,6 +3877,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3743,6 +3895,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3760,6 +3913,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3777,6 +3931,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3794,6 +3949,7 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3808,7 +3964,6 @@ class TestLegalSettingsScreen:
 @pytest.mark.usefixtures("setup", "directory", "now_time")
 class TestServices:
     def test_services_configured(self):
-         
         try:
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
             WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
@@ -3837,6 +3992,7 @@ class TestServices:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3861,6 +4017,7 @@ class TestServices:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3878,6 +4035,7 @@ class TestServices:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3895,6 +4053,7 @@ class TestServices:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3912,6 +4071,7 @@ class TestServices:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3929,6 +4089,7 @@ class TestServices:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3946,6 +4107,7 @@ class TestServices:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                         },
                         "time": time.time_ns(),
                         "fields": {

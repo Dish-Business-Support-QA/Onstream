@@ -46,11 +46,12 @@ client = InfluxDBClient(host=grafana, port=8086, database='ONSTREAM')
 def auto_start(request):
     test_start = [
         {
-            "measurement": "Chrome",
+            "measurement": "OnStream",
             "tags": {
                 "Software": version,
                 "Test": mc.get_value(),
-                "URL": ChannelCount.dishtv,
+                "URL": ChannelCount.dishtv, 
+                "Browser": "Chrome",
             },
             "time": time.time_ns(),
             "fields": {
@@ -65,11 +66,12 @@ def auto_start(request):
     def auto_fin():
         test_end = [
             {
-                "measurement": "Chrome",
+                "measurement": "OnStream",
                 "tags": {
                     "Software": version,
                     "Test": mc.get_value(),
-                    "URL": ChannelCount.dishtv,
+                    "URL": ChannelCount.dishtv, 
+                    "Browser": "Chrome",
                 },
                 "time": time.time_ns(),
                 "fields": {
@@ -152,12 +154,13 @@ class TestVersion:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -179,12 +182,13 @@ class TestVersion:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -197,12 +201,13 @@ class TestVersion:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -215,12 +220,13 @@ class TestVersion:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -233,12 +239,13 @@ class TestVersion:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -251,12 +258,13 @@ class TestVersion:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -269,12 +277,13 @@ class TestVersion:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -309,12 +318,13 @@ class TestHomeScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -336,12 +346,13 @@ class TestHomeScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -354,12 +365,13 @@ class TestHomeScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -372,12 +384,13 @@ class TestHomeScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -390,12 +403,13 @@ class TestHomeScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -408,12 +422,13 @@ class TestHomeScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -426,12 +441,13 @@ class TestHomeScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -461,12 +477,13 @@ class TestHomeScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -488,12 +505,13 @@ class TestHomeScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -506,12 +524,13 @@ class TestHomeScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -524,12 +543,13 @@ class TestHomeScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -542,12 +562,13 @@ class TestHomeScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -560,12 +581,13 @@ class TestHomeScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -578,12 +600,13 @@ class TestHomeScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -612,12 +635,13 @@ class TestHomeScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -639,12 +663,13 @@ class TestHomeScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -657,12 +682,13 @@ class TestHomeScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -675,12 +701,13 @@ class TestHomeScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -693,12 +720,13 @@ class TestHomeScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -711,12 +739,13 @@ class TestHomeScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -729,12 +758,13 @@ class TestHomeScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -760,12 +790,13 @@ class TestHomeScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -787,12 +818,13 @@ class TestHomeScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -805,12 +837,13 @@ class TestHomeScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -823,12 +856,13 @@ class TestHomeScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -841,12 +875,13 @@ class TestHomeScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -859,12 +894,13 @@ class TestHomeScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -877,12 +913,13 @@ class TestHomeScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -917,12 +954,13 @@ class TestHomeScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -944,12 +982,13 @@ class TestHomeScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -962,12 +1001,13 @@ class TestHomeScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -980,12 +1020,13 @@ class TestHomeScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -998,12 +1039,13 @@ class TestHomeScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1016,12 +1058,13 @@ class TestHomeScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1034,12 +1077,13 @@ class TestHomeScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1070,12 +1114,13 @@ class TestGuideScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1097,12 +1142,13 @@ class TestGuideScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1115,12 +1161,13 @@ class TestGuideScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1133,12 +1180,13 @@ class TestGuideScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1151,12 +1199,13 @@ class TestGuideScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1169,12 +1218,13 @@ class TestGuideScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1187,12 +1237,13 @@ class TestGuideScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1216,12 +1267,13 @@ class TestGuideScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1243,12 +1295,13 @@ class TestGuideScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1261,12 +1314,13 @@ class TestGuideScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1279,12 +1333,13 @@ class TestGuideScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1297,12 +1352,13 @@ class TestGuideScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1315,12 +1371,13 @@ class TestGuideScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1333,12 +1390,13 @@ class TestGuideScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1361,12 +1419,13 @@ class TestGuideScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1388,12 +1447,13 @@ class TestGuideScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1406,12 +1466,13 @@ class TestGuideScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1424,12 +1485,13 @@ class TestGuideScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1442,12 +1504,13 @@ class TestGuideScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1460,12 +1523,13 @@ class TestGuideScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1478,12 +1542,13 @@ class TestGuideScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1506,12 +1571,13 @@ class TestGuideScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1533,12 +1599,13 @@ class TestGuideScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1551,12 +1618,13 @@ class TestGuideScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1569,12 +1637,13 @@ class TestGuideScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1587,11 +1656,12 @@ class TestGuideScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1604,12 +1674,13 @@ class TestGuideScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1622,12 +1693,13 @@ class TestGuideScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1661,12 +1733,13 @@ class TestSideBarScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1688,12 +1761,13 @@ class TestSideBarScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1706,12 +1780,13 @@ class TestSideBarScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1724,12 +1799,13 @@ class TestSideBarScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1742,12 +1818,13 @@ class TestSideBarScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1760,12 +1837,13 @@ class TestSideBarScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1778,12 +1856,13 @@ class TestSideBarScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1809,12 +1888,13 @@ class TestSideBarScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1836,12 +1916,13 @@ class TestSideBarScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1854,12 +1935,13 @@ class TestSideBarScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1872,12 +1954,13 @@ class TestSideBarScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1890,12 +1973,13 @@ class TestSideBarScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1908,12 +1992,13 @@ class TestSideBarScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1926,12 +2011,13 @@ class TestSideBarScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1955,12 +2041,13 @@ class TestSideBarScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1982,12 +2069,13 @@ class TestSideBarScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2000,12 +2088,13 @@ class TestSideBarScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2018,12 +2107,13 @@ class TestSideBarScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2036,12 +2126,13 @@ class TestSideBarScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2054,12 +2145,13 @@ class TestSideBarScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2072,12 +2164,13 @@ class TestSideBarScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2104,12 +2197,13 @@ class TestSideBarScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2131,12 +2225,13 @@ class TestSideBarScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2149,12 +2244,13 @@ class TestSideBarScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2167,12 +2263,13 @@ class TestSideBarScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2185,12 +2282,13 @@ class TestSideBarScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2203,12 +2301,13 @@ class TestSideBarScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2221,12 +2320,13 @@ class TestSideBarScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2283,12 +2383,13 @@ class TestLiveTV:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2310,12 +2411,13 @@ class TestLiveTV:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2328,12 +2430,13 @@ class TestLiveTV:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2346,12 +2449,13 @@ class TestLiveTV:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2364,12 +2468,13 @@ class TestLiveTV:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2382,12 +2487,13 @@ class TestLiveTV:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2400,12 +2506,13 @@ class TestLiveTV:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2437,12 +2544,13 @@ class TestLiveTV:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2464,12 +2572,13 @@ class TestLiveTV:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2482,12 +2591,13 @@ class TestLiveTV:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2500,12 +2610,13 @@ class TestLiveTV:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2518,12 +2629,13 @@ class TestLiveTV:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2536,12 +2648,13 @@ class TestLiveTV:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2554,12 +2667,13 @@ class TestLiveTV:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2599,12 +2713,13 @@ class TestLiveTV:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2626,12 +2741,13 @@ class TestLiveTV:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2644,12 +2760,13 @@ class TestLiveTV:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2662,12 +2779,13 @@ class TestLiveTV:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2680,12 +2798,13 @@ class TestLiveTV:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2698,12 +2817,13 @@ class TestLiveTV:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2716,12 +2836,13 @@ class TestLiveTV:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2761,12 +2882,13 @@ class TestLiveTV:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2788,12 +2910,13 @@ class TestLiveTV:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2806,12 +2929,13 @@ class TestLiveTV:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2824,12 +2948,13 @@ class TestLiveTV:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2842,12 +2967,13 @@ class TestLiveTV:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2860,12 +2986,13 @@ class TestLiveTV:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2878,12 +3005,13 @@ class TestLiveTV:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2939,12 +3067,13 @@ class TestLiveTV:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2966,12 +3095,13 @@ class TestLiveTV:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2984,12 +3114,13 @@ class TestLiveTV:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3002,12 +3133,13 @@ class TestLiveTV:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3020,12 +3152,13 @@ class TestLiveTV:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3038,12 +3171,13 @@ class TestLiveTV:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3056,12 +3190,13 @@ class TestLiveTV:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3088,12 +3223,13 @@ class TestSupportSettingsScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3115,12 +3251,13 @@ class TestSupportSettingsScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3133,12 +3270,13 @@ class TestSupportSettingsScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3151,12 +3289,13 @@ class TestSupportSettingsScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3169,12 +3308,13 @@ class TestSupportSettingsScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3187,12 +3327,13 @@ class TestSupportSettingsScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3205,12 +3346,13 @@ class TestSupportSettingsScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3246,12 +3388,13 @@ class TestSupportSettingsScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3273,12 +3416,13 @@ class TestSupportSettingsScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3291,12 +3435,13 @@ class TestSupportSettingsScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3309,12 +3454,13 @@ class TestSupportSettingsScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3327,12 +3473,13 @@ class TestSupportSettingsScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3345,12 +3492,13 @@ class TestSupportSettingsScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3363,12 +3511,13 @@ class TestSupportSettingsScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3393,12 +3542,13 @@ class TestLegalSettingsScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3420,12 +3570,13 @@ class TestLegalSettingsScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3438,12 +3589,13 @@ class TestLegalSettingsScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3456,12 +3608,13 @@ class TestLegalSettingsScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3474,12 +3627,13 @@ class TestLegalSettingsScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3492,12 +3646,13 @@ class TestLegalSettingsScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3510,12 +3665,13 @@ class TestLegalSettingsScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3539,12 +3695,13 @@ class TestLegalSettingsScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3566,12 +3723,13 @@ class TestLegalSettingsScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3584,12 +3742,13 @@ class TestLegalSettingsScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3602,12 +3761,13 @@ class TestLegalSettingsScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3620,12 +3780,13 @@ class TestLegalSettingsScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3638,12 +3799,13 @@ class TestLegalSettingsScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3656,12 +3818,13 @@ class TestLegalSettingsScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3680,12 +3843,13 @@ class TestLegalSettingsScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3707,12 +3871,13 @@ class TestLegalSettingsScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3725,12 +3890,13 @@ class TestLegalSettingsScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3743,12 +3909,13 @@ class TestLegalSettingsScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3761,12 +3928,13 @@ class TestLegalSettingsScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3779,12 +3947,13 @@ class TestLegalSettingsScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3797,12 +3966,13 @@ class TestLegalSettingsScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3827,12 +3997,13 @@ class TestLegalSettingsScreen:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3854,12 +4025,13 @@ class TestLegalSettingsScreen:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3872,12 +4044,13 @@ class TestLegalSettingsScreen:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3890,12 +4063,13 @@ class TestLegalSettingsScreen:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3908,12 +4082,13 @@ class TestLegalSettingsScreen:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3926,12 +4101,13 @@ class TestLegalSettingsScreen:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3944,12 +4120,13 @@ class TestLegalSettingsScreen:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3987,12 +4164,13 @@ class TestServices:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
                 {
-                    "measurement": "Chrome",
+                    "measurement": "OnStream",
                     "tags": {
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv,
+                        "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -4012,12 +4190,13 @@ class TestServices:
             if len(loading_circle) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4030,12 +4209,13 @@ class TestServices:
             elif len(no_streaming) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4048,12 +4228,13 @@ class TestServices:
             elif len(error_404) > 0:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4066,12 +4247,13 @@ class TestServices:
             elif len(loading_element):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4084,12 +4266,13 @@ class TestServices:
             elif len(went_wrong):
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4102,12 +4285,13 @@ class TestServices:
             else:
                 body = [
                     {
-                        "measurement": "Chrome",
+                        "measurement": "OnStream",
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv,
+                            "URL": ChannelCount.dishtv, 
+                            "Browser": "Chrome",
                         },
                         "time": time.time_ns(),
                         "fields": {

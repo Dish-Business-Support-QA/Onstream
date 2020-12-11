@@ -9,14 +9,15 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException,
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
-from webdriver_manager.firefox import GeckoDriverManager
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime, timedelta
 from influxdb import InfluxDBClient
-from FireFox_Thread import version, mc, ChannelCount
-from selenium.webdriver.firefox.service import Service
+from Edge_Thread import version, mc, ChannelCount
+from msedge.selenium_tools import EdgeOptions
+from selenium.webdriver.edge.service import Service
 
-testrun = '1.0.3'
+testrun = '1.0.8'
 
 try:
     base_path = os.environ['ONSTREAM_HOME']
@@ -51,13 +52,13 @@ def auto_start(request):
                 "Software": version,
                 "Test": mc.get_value(),
                 "URL": ChannelCount.dishtv, 
-                    "Browser": "FireFox",
+                "Browser": "Edge",
             },
             "time": time.time_ns(),
             "fields": {
                 "events_title": "test start",
                 "text": "This is the start of test " + mc.get_value() + " on firmware " + version + " tested on " + ChannelCount.dishtv,
-                "tags": "Onstream" + "," + "FireFox" + "," + mc.get_value() + "," + version + "," + ChannelCount.dishtv
+                "tags": "Onstream" + "," + "Edge" + "," + mc.get_value() + "," + version + "," + ChannelCount.dishtv
             }
         }
     ]
@@ -71,13 +72,13 @@ def auto_start(request):
                     "Software": version,
                     "Test": mc.get_value(),
                     "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                    "Browser": "Edge",
                 },
                 "time": time.time_ns(),
                 "fields": {
                     "events_title": "test end",
                     "text": "This is the end of test " + mc.get_value() + " on firmware " + version + " tested on " + ChannelCount.dishtv,
-                    "tags": "Onstream" + "," + "FireFox" + "," + mc.get_value() + "," + version + "," + ChannelCount.dishtv
+                    "tags": "Onstream" + "," + "Edge" + "," + mc.get_value() + "," + version + "," + ChannelCount.dishtv
                 }
             }
         ]
@@ -131,8 +132,11 @@ def directory(request):
 
 @pytest.fixture(scope="class")
 def setup(request):
-    service = Service(GeckoDriverManager().install())
-    driver = webdriver.Firefox(service=service)
+    caps = EdgeOptions()
+    caps.use_chromium = True
+    caps.headless = False
+    service = Service(EdgeChromiumDriverManager().install())
+    driver = webdriver.Edge(options=caps, service=service)
     dishtv = ChannelCount.dishtv
     driver.get(dishtv)
     driver.maximize_window()
@@ -147,7 +151,7 @@ def setup(request):
 
 
 @pytest.fixture(scope="class")
-def time(request):
+def now_time(request):
     t1 = datetime.now() + timedelta(hours=1)
     t2 = datetime.now() + timedelta(hours=2)
     t3 = datetime.now() + timedelta(hours=3)
@@ -190,7 +194,7 @@ class TestVersion:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -218,7 +222,7 @@ class TestVersion:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -237,7 +241,7 @@ class TestVersion:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -256,7 +260,7 @@ class TestVersion:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -275,7 +279,7 @@ class TestVersion:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -294,7 +298,7 @@ class TestVersion:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -313,7 +317,7 @@ class TestVersion:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -354,7 +358,7 @@ class TestHomeScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -382,7 +386,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -401,7 +405,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -420,7 +424,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -439,7 +443,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -458,7 +462,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -477,7 +481,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -513,7 +517,7 @@ class TestHomeScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -541,7 +545,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -560,7 +564,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -579,7 +583,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -598,7 +602,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -617,7 +621,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -636,7 +640,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -671,7 +675,7 @@ class TestHomeScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -699,7 +703,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -718,7 +722,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -737,7 +741,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -756,7 +760,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -775,7 +779,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -794,7 +798,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -826,7 +830,7 @@ class TestHomeScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -854,7 +858,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -873,7 +877,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -892,7 +896,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -911,7 +915,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -930,7 +934,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -949,7 +953,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -990,7 +994,7 @@ class TestHomeScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1018,7 +1022,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1037,7 +1041,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1056,7 +1060,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1075,7 +1079,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1094,7 +1098,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1113,7 +1117,7 @@ class TestHomeScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1150,7 +1154,7 @@ class TestGuideScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1178,7 +1182,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1197,7 +1201,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1216,7 +1220,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1235,7 +1239,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1254,7 +1258,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1273,7 +1277,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1303,7 +1307,7 @@ class TestGuideScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1331,7 +1335,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1350,7 +1354,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1369,7 +1373,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1388,7 +1392,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1407,7 +1411,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1426,7 +1430,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1455,7 +1459,7 @@ class TestGuideScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1483,7 +1487,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1502,7 +1506,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1521,7 +1525,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1540,7 +1544,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1559,7 +1563,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1578,7 +1582,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1607,7 +1611,7 @@ class TestGuideScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1635,7 +1639,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1654,7 +1658,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1673,7 +1677,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1691,7 +1695,7 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1710,7 +1714,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1729,7 +1733,7 @@ class TestGuideScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1769,7 +1773,7 @@ class TestSideBarScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1797,7 +1801,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1816,7 +1820,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1835,7 +1839,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1854,7 +1858,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1873,7 +1877,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1892,7 +1896,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1924,7 +1928,7 @@ class TestSideBarScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1952,7 +1956,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1971,7 +1975,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1990,7 +1994,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2009,7 +2013,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2028,7 +2032,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2047,7 +2051,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2077,7 +2081,7 @@ class TestSideBarScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2105,7 +2109,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2124,7 +2128,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2143,7 +2147,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2162,7 +2166,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2181,7 +2185,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2200,7 +2204,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2233,7 +2237,7 @@ class TestSideBarScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2261,7 +2265,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2280,7 +2284,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2299,7 +2303,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2318,7 +2322,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2337,7 +2341,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2356,7 +2360,7 @@ class TestSideBarScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2419,7 +2423,7 @@ class TestLiveTV:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2447,7 +2451,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2466,7 +2470,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2485,7 +2489,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2504,7 +2508,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2523,7 +2527,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2542,7 +2546,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2580,7 +2584,7 @@ class TestLiveTV:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2608,7 +2612,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2627,7 +2631,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2646,7 +2650,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2665,7 +2669,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2684,7 +2688,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2703,7 +2707,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2749,7 +2753,7 @@ class TestLiveTV:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2777,7 +2781,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2796,7 +2800,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2815,7 +2819,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2834,7 +2838,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2853,7 +2857,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2872,7 +2876,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2918,7 +2922,7 @@ class TestLiveTV:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2946,7 +2950,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2965,7 +2969,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2984,7 +2988,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3003,7 +3007,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3022,7 +3026,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3041,7 +3045,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3103,7 +3107,7 @@ class TestLiveTV:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3131,7 +3135,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3150,7 +3154,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3169,7 +3173,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3188,7 +3192,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3207,7 +3211,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3226,7 +3230,7 @@ class TestLiveTV:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3259,7 +3263,7 @@ class TestSupportSettingsScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3287,7 +3291,7 @@ class TestSupportSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3306,7 +3310,7 @@ class TestSupportSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3325,7 +3329,7 @@ class TestSupportSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3344,7 +3348,7 @@ class TestSupportSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3363,7 +3367,7 @@ class TestSupportSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3382,7 +3386,7 @@ class TestSupportSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3424,7 +3428,7 @@ class TestSupportSettingsScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3452,7 +3456,7 @@ class TestSupportSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3471,7 +3475,7 @@ class TestSupportSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3490,7 +3494,7 @@ class TestSupportSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3509,7 +3513,7 @@ class TestSupportSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3528,7 +3532,7 @@ class TestSupportSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3547,7 +3551,7 @@ class TestSupportSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3578,7 +3582,7 @@ class TestLegalSettingsScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3606,7 +3610,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3625,7 +3629,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3644,7 +3648,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3663,7 +3667,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3682,7 +3686,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3701,7 +3705,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3731,7 +3735,7 @@ class TestLegalSettingsScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3759,7 +3763,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3778,7 +3782,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3797,7 +3801,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3816,7 +3820,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3835,7 +3839,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3854,7 +3858,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3879,7 +3883,7 @@ class TestLegalSettingsScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3907,7 +3911,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3926,7 +3930,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3945,7 +3949,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3964,7 +3968,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3983,7 +3987,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4002,7 +4006,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4033,7 +4037,7 @@ class TestLegalSettingsScreen:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -4061,7 +4065,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4080,7 +4084,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4099,7 +4103,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4118,7 +4122,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4137,7 +4141,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4156,7 +4160,7 @@ class TestLegalSettingsScreen:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4200,7 +4204,7 @@ class TestServices:
                         "Test": mc.get_value(),
                         "Pytest": self.name,
                         "URL": ChannelCount.dishtv, 
-                        "Browser": "FireFox",
+                        "Browser": "Edge",
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -4226,7 +4230,7 @@ class TestServices:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4245,7 +4249,7 @@ class TestServices:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4264,7 +4268,7 @@ class TestServices:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4283,7 +4287,7 @@ class TestServices:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4302,7 +4306,7 @@ class TestServices:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4321,7 +4325,7 @@ class TestServices:
                             "Test": mc.get_value(),
                             "Pytest": self.name,
                             "URL": ChannelCount.dishtv, 
-                            "Browser": "FireFox",
+                            "Browser": "Edge",
                         },
                         "time": time.time_ns(),
                         "fields": {

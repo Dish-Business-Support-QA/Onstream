@@ -5,6 +5,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from msedge.selenium_tools import EdgeOptions
+from selenium.webdriver.edge.service import Service
 
 try:
     base_path = os.environ['ONSTREAM_HOME']
@@ -20,7 +23,10 @@ version = '1.2.27'
 
 
 class ChannelCount(object):
-    driver = webdriver.Safari(executable_path='/usr/bin/safaridriver')
+    caps = EdgeOptions()
+    caps.use_chromium = True
+    service = Service(EdgeChromiumDriverManager().install())
+    driver = webdriver.Edge(options=caps, service=service)
     dishtv = "https://watchdishtv.com/"
     driver.get(dishtv)
     WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
@@ -57,7 +63,7 @@ class CountRun:
 
 class ChannelChange:
     def __init__(self):
-        self.change = 50
+        self.change = 200
 
     def get_number(self):
         return self.change
@@ -72,7 +78,7 @@ def pytest_run():
     while int(len(channels)) < int(cc.get_number()):
         mc.increment()
         mc.save_value()
-        subprocess.run(['pytest', '--pytest-influxdb', '--influxdb_project=Safari', '--influxdb_run_id=' + str(mc.get_value()), os.path.join(test_path, 'OnStream_Safari.py'), '-sv'])
+        subprocess.run(['pytest', '--pytest-influxdb', '--influxdb_project=Chrome', '--influxdb_run_id=' + str(mc.get_value()), os.path.join(test_path, 'OnStream_Edge.py'), '-sv'])
         channels = ChannelCount.all_channels + channels
 
 

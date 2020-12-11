@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.firefox.service import Service
 
 try:
     base_path = os.environ['ONSTREAM_HOME']
@@ -21,14 +22,15 @@ version = '1.2.27'
 
 
 class ChannelCount(object):
-    driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
+    service = Service(GeckoDriverManager().install())
+    driver = webdriver.Firefox(service=service)
     dishtv = "https://watchdishtv.com/"
     driver.get(dishtv)
     WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
     WebDriverWait(driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
     WebDriverWait(driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="9491"]')))
     links = []
-    channels = driver.find_elements_by_xpath('(//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"])')
+    channels = driver.find_elements(By.XPATH, '(//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"])')
     for i in range(len(channels)):
         links.append(channels[i].get_attribute("href"))
     all_channels = list(dict.fromkeys(links))

@@ -26861,3 +26861,44 @@ action.dispatch/chainEvents<@chrome://marionette/content/action.js:1028:20
 1605290911421	geckodriver	INFO	Listening on 127.0.0.1:55555
 1605290912267	geckodriver	INFO	Listening on 127.0.0.1:55570
 1605290912707	geckodriver	INFO	Listening on 127.0.0.1:55581
+1607386629190	geckodriver	INFO	Listening on 127.0.0.1:49937
+1607386691513	geckodriver	INFO	Listening on 127.0.0.1:50011
+1607386965631	geckodriver	INFO	Listening on 127.0.0.1:50180
+1607386966643	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/4_/_dcrxz611mv09n6nd404kj_80000gn/T/rust_mozprofileYFFTTa"
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1607386973712	Marionette	INFO	Listening on port 50191
+1607386973822	Marionette	WARN	TLS certificate errors will be ignored for this session
+1607387013929	Marionette	INFO	Stopped listening on port 50191
+1607387018115	geckodriver	INFO	Listening on 127.0.0.1:50334
+1607387019127	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/4_/_dcrxz611mv09n6nd404kj_80000gn/T/rust_mozprofilerWZZuT"
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1607387022653	Marionette	INFO	Listening on port 50345
+1607387022742	Marionette	WARN	TLS certificate errors will be ignored for this session
+1607439490426	Marionette	INFO	Stopped listening on port 50345
+1607441704614	geckodriver	INFO	Listening on 127.0.0.1:62947
+1607441705419	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/4_/_dcrxz611mv09n6nd404kj_80000gn/T/rust_mozprofileZWaFc7"
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1607441710882	Marionette	INFO	Listening on port 62959
+1607441711019	Marionette	WARN	TLS certificate errors will be ignored for this session
+1607441734173	geckodriver	INFO	Listening on 127.0.0.1:63048
+1607441735189	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/4_/_dcrxz611mv09n6nd404kj_80000gn/T/rust_mozprofileKj1m0Y"
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1607441740033	Marionette	INFO	Listening on port 63059
+1607441740163	Marionette	WARN	TLS certificate errors will be ignored for this session
+1607441831442	Marionette	INFO	Stopped listening on port 62959
+1607441834083	Marionette	INFO	Stopped listening on port 63059
+1607442163606	geckodriver	INFO	Listening on 127.0.0.1:63658
+1607442164616	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/4_/_dcrxz611mv09n6nd404kj_80000gn/T/rust_mozprofileypeOUc"
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1607442170382	Marionette	INFO	Listening on port 63669
+1607442170429	Marionette	WARN	TLS certificate errors will be ignored for this session
+Exiting due to channel error.
+Exiting due to channel error.
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Exiting due to channel error.
+1607442249183	geckodriver	INFO	Listening on 127.0.0.1:63759
+1607442250182	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/4_/_dcrxz611mv09n6nd404kj_80000gn/T/rust_mozprofile1zXD17"
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1607442255451	Marionette	INFO	Listening on port 63770
+1607442255494	Marionette	WARN	TLS certificate errors will be ignored for this session
+1607442261113	Marionette	INFO	Stopped listening on port 63770

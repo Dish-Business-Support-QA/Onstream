@@ -10,6 +10,7 @@ import numpy as np
 import linecache
 import time
 import subprocess
+import shutil
 from collections import Counter
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -25,32 +26,17 @@ from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime, timedelta
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.opera import OperaDriverManager
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-import pychromecast
+from selenium.webdriver.edge.service import Service
+from selenium.webdriver.edge.options import Options
 from pandas.errors import EmptyDataError
-
-try:
-    base_path = os.environ['ONSTREAM_HOME']
-except KeyError:
-    print('Could not get environment variable "base_path". This is needed for the tests!"')
-    raise
-
-
-class ChannelChange:
-    def __init__(self):
-        print("Please enter how many channel changes you wish to occur!")
-        self.change = input()
-        self.num = self.change
-
-    def get_number(self):
-        return self.change
-
-    def number(self):
-        return self.num
+from influxdb import InfluxDBClient
+from msedge.selenium_tools import EdgeOptions
+version = '1.2.27'
+caps = EdgeOptions()
+caps.use_chromium = True
+service = Service(EdgeChromiumDriverManager().install())
+driver = webdriver.Edge(options=caps, service=service)
 
 
-cc = ChannelChange()
-
-cc.get_number()
-
-print(cc.number())

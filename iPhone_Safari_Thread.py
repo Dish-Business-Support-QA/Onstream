@@ -66,8 +66,14 @@ class GetService(object):
     service.to_csv(r'/Users/dishbusiness/Desktop/OnStreamTestFiles/Logs/dish_channel_list.csv', header=["Service_Number", "Call_Letters"], index=False)
     service_number = float(ChannelCount.first_channel)
     df = pd.read_csv(r'/Users/dishbusiness/Desktop/OnStreamTestFiles/Logs/dish_channel_list.csv')
-    call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
-    call_letters = str(call_letters)
+    try:
+        call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
+        call_letters = str(call_letters)
+    except IndexError:
+        second_channel = ChannelCount.all_channels[1].split('/')[5]
+        service_number = float(second_channel)
+        call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
+        call_letters = str(call_letters)
 
 
 class CountRun:

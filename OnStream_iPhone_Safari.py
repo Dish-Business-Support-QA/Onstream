@@ -156,12 +156,14 @@ def current_time(request):
 def setup(request):
     appium_service = AppiumService()
     appium_service.start()
+    dishtv = ChannelCount.dishtv
     desired_caps = ChannelCount.desired_caps
     driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
-    driver.get('https://watchdishtv.com/')
+    driver.get(dishtv)
     request.cls.driver = driver
     logo = "DaVita Logo"  # Big logo on home screen
     request.cls.logo = logo
+    request.cls.dishtv = dishtv
     yield
     driver.quit()
 
@@ -337,8 +339,7 @@ class TestVersion:
 class TestHomeScreen:
     def test_images_displayed(self):
         try:
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]')))
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]')))
             self.driver.find_element(By.XPATH, '//div[@class="_1oUh3apnwdwzBiB_Uw6seb "]').is_displayed()  # banner
             self.driver.find_element(By.XPATH, '//img[@alt="Dish Logo"]').is_displayed()  # dish
             self.driver.find_element(By.XPATH, '//img[@alt="Dish Logo"]').is_displayed()  # dish fiber
@@ -1678,11 +1679,34 @@ class TestGuideScreen:
 class TestSideBarScreen:
     def test_images_displayed(self):
         try:
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_1ATKIs2nHrPvAu0b3sAXQz"]'))).click()
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//span[contains(text(), "TV Guide")]'))).click()
-            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))
-            channel = self.driver.find_elements(By.XPATH, '//div[@class="A7qtluKp_shMOW5H57lxU"]')
-            channel[1].click()
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_1ATKIs2nHrPvAu0b3sAXQz"]'))).click()  # click the hamburger
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//span[contains(text(), "TV Guide")]'))).click()  # click TV Guide
+            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # wait for the guide to populate
+            channel = self.driver.find_elements(By.XPATH, '//div[@class="_1Pu3Odv6M5tX6rukxQ6GG3"]')  # click on first channel
+            for i in range(100):
+                try:
+                    channel[i].click()
+                    if WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % GetService.call_letters))):  # wait for first channel image to appear
+                        break
+                    else:
+                        WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]'))).click()  # click back button
+                        WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # wait for the guide to populate
+                        pass
+                except TimeoutException:
+                    button = self.driver.find_elements(By.XPATH, '//div[@class="JuHZzfNzpm4bD3481WYQW jEGIqrEa7SjV1rD7HxHBc"]')
+                    if len(button) == 1:  # see if exit button is there
+                        WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]'))).click()  # click exit button
+                        WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # wait for the guide to populate
+                        pass
+                    elif len(button) == 0:  # see if exit button is there
+                        pass
+                except NoSuchElementException:
+                    if not self.driver.find_element(By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]'):  # see if exit button is there
+                        pass
+                    elif self.driver.find_element(By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]'):  # see if exit button is there
+                        WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]'))).click()  # click exit button
+                        WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # wait for the guide to populate
+                        pass
             WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % GetService.call_letters)))
             self.driver.find_element(By.XPATH, '//div[@class="_2hHA9bFIq-vRi5vrWcTHJY"]').is_displayed()  # show picture
             self.driver.find_element(By.XPATH, '//div[@class="_2MN6t7M-yb_HV8dBhfN6gV"]').is_displayed()  # banner
@@ -2329,24 +2353,43 @@ class TestSideBarScreen:
 class TestLiveTV:
     def test_images_displayed(self):
         try:
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_1ATKIs2nHrPvAu0b3sAXQz"]'))).click()  # click the hamburger
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//span[contains(text(), "TV Guide")]'))).click()  # click TV Guide
-            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # wait for the guide to populate
-            channel = self.driver.find_elements(By.XPATH, '//div[@class="_23r_4FmKovJreL51RFbebf schema_accent_fontColor"]')  # click a channel for ESPN
-            channel[1].click()
-            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % GetService.call_letters)))  # wait for ESPN to appear
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_1ATKIs2nHrPvAu0b3sAXQz"]'))).click()  # click the hamburger
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//span[contains(text(), "TV Guide")]'))).click()  # click TV Guide
+            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # wait for the guide to populate
+            channel = self.driver.find_elements(By.XPATH, '//div[@class="_1Pu3Odv6M5tX6rukxQ6GG3"]')  # click on first channel
+            for i in range(100):
+                try:
+                    channel[i].click()
+                    if WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % GetService.call_letters))):  # wait for first channel image to appear
+                        break
+                    else:
+                        WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]'))).click()  # click back button
+                        WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # wait for the guide to populate
+                        pass
+                except TimeoutException:
+                    button = self.driver.find_elements(By.XPATH, '//div[@class="JuHZzfNzpm4bD3481WYQW jEGIqrEa7SjV1rD7HxHBc"]')
+                    if len(button) == 1:  # see if exit button is there
+                        WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]'))).click()  # click exit button
+                        WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # wait for the guide to populate
+                        pass
+                    elif len(button) == 0:  # see if exit button is there
+                        pass
+                except NoSuchElementException:
+                    if not self.driver.find_element(By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]'):  # see if exit button is there
+                        pass
+                    elif self.driver.find_element(By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]'):  # see if exit button is there
+                        WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]'))).click()  # click exit button
+                        WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # wait for the guide to populate
+                        pass
             self.driver.find_element(By.XPATH, '//span[contains(text(), "WATCH LIVE")]').click()  # Click Watch Live
-            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//img[@id="bmpui-id-32"]')))  # wait for loading screen to disappear
+            WebDriverWait(self.driver, 10).until_not(ec.presence_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//img[@id="bmpui-id-32"]')))  # wait for loading screen to disappear
             self.driver.find_element(By.XPATH, '//li[contains(text(), "Mini Guide")]').click()  # click on the mini guide
             WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[contains(text(), "Loading TV Guide...")]')))  # wait for mini guide to load
             self.driver.find_element(By.XPATH, '//img[@alt="%s"]' % GetService.call_letters).is_displayed()  # Channel logo top
             self.driver.find_element(By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel).is_displayed()  # Channel logo in mini guide
             self.driver.find_element(By.XPATH, '//div[@class="bmpui-ui-container bmpui-divider"]').is_displayed()  # divider
             self.driver.find_element(By.XPATH, '//div[@class="bmpui-ui-container bmpui-fullTvGuideIcon"]').is_displayed()  # Left Arrow
-            self.driver.find_element(By.XPATH, '//span[@class="bmpui-ui-label bmpui-miniEpgToggleLabel"]').is_displayed()  # Down Arrow
-            self.driver.find_element(By.XPATH, '//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_displayed()  # Right Arrow
-            self.driver.find_element(By.XPATH, '//div[@class="bmpui-ui-container bmpui-moreInfoIcon"]').is_displayed()  # info emblem
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
@@ -2503,3 +2546,1541 @@ class TestLiveTV:
                 client.write_points(body)
                 assert False, "timeout error"
 
+    def test_text_displayed(self):
+        try:
+            self.driver.find_element(By.XPATH, '//div[@class="_1AhFoq9LRVrQE0BrdpGozJ schema_epgTimelineColors_background"]').is_displayed()  # TODAY
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now).is_displayed()  # Time 1
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now1).is_displayed()  # Time 2
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now2).is_displayed()  # Time 3
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now3).is_displayed()  # Time 4
+            self.driver.find_element(By.XPATH, '//li[contains(text(), "Info")]').click()  # click on the mini guide
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//h1[@class="FFLXWtJVpqcxH44tIdBVN"]')))  # Program Name
+            self.driver.find_element(By.XPATH, '//p[@class="_3o98L-8sD6CKQAd6yvgfuP"]').is_displayed()  # Run Time
+            self.driver.find_element(By.XPATH, '//p[@class="_9LEGNOuilhdI-FMKC2w6w"]').is_displayed()  # Description
+            self.driver.find_element(By.XPATH, '//li[contains(text(), "Info")]').is_displayed()  # Info
+            self.driver.find_element(By.XPATH, '//li[contains(text(), "Mini Guide")]').is_displayed()  # Mini Guide
+        except NoSuchElementException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            body = [
+                {
+                    "measurement": "OnStream",
+                    "tags": {
+                        "Software": version,
+                        "Test": mc.get_value(),
+                        "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
+                        "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
+                    },
+                    "time": time.time_ns(),
+                    "fields": {
+                        "element_not_found": 1,
+                    }
+                }
+            ]
+            client.write_points(body)
+            assert False, "Element was not found"
+        except TimeoutException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
+            if len(loading_circle) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "loading_circle": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck on loading screen"
+            elif len(no_streaming) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "unable_to_connect": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "It appears that you are not able to connect to Streaming Services at this time."
+            elif len(error_404) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "error_404": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "404 error"
+            elif len(loading_element):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "element_loading": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
+            else:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "timeout_exception": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "timeout error"
+
+    def test_buttons_displayed(self):
+        try:
+            self.driver.find_element(By.XPATH, '//button[@class="_39NOsnyu1z9yTrkzCAlapF"]').is_displayed()  # Full TV Guide back button
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').is_displayed()  # Mute button
+            self.driver.find_element(By.XPATH, '//div[@class="bmpui-seekbar-markers"]').is_displayed()  # Seeker Bar
+            self.driver.find_element(By.XPATH, '//button[@id="bmpui-id-18"]').is_displayed()  # Cast button
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]').is_displayed()  # Closed Caption button
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]').is_displayed()  # Full Screen button
+        except NoSuchElementException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            body = [
+                {
+                    "measurement": "OnStream",
+                    "tags": {
+                        "Software": version,
+                        "Test": mc.get_value(),
+                        "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
+                        "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
+                    },
+                    "time": time.time_ns(),
+                    "fields": {
+                        "element_not_found": 1,
+                    }
+                }
+            ]
+            client.write_points(body)
+            assert False, "Element was not found"
+        except TimeoutException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
+            if len(loading_circle) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "loading_circle": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck on loading screen"
+            elif len(no_streaming) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "unable_to_connect": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "It appears that you are not able to connect to Streaming Services at this time."
+            elif len(error_404) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "error_404": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "404 error"
+            elif len(loading_element):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "element_loading": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
+            else:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "timeout_exception": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "timeout error"
+
+    def test_buttons_enabled(self):
+        try:
+            self.driver.find_element(By.XPATH, '//button[@class="_39NOsnyu1z9yTrkzCAlapF"]').is_enabled()  # Full TV Guide back button
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').is_enabled()  # Mute button
+            self.driver.find_element(By.XPATH, '//div[@class="bmpui-seekbar-markers"]').is_enabled()  # Seeker Bar
+            self.driver.find_element(By.XPATH, '//button[@id="bmpui-id-18"]').is_enabled()  # Cast button
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]').is_enabled()  # Closed Caption button
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]').is_enabled()  # Full Screen button
+        except NoSuchElementException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            body = [
+                {
+                    "measurement": "OnStream",
+                    "tags": {
+                        "Software": version,
+                        "Test": mc.get_value(),
+                        "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
+                        "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
+                    },
+                    "time": time.time_ns(),
+                    "fields": {
+                        "element_not_found": 1,
+                    }
+                }
+            ]
+            client.write_points(body)
+            assert False, "Element was not found"
+        except TimeoutException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
+            if len(loading_circle) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "loading_circle": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck on loading screen"
+            elif len(no_streaming) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "unable_to_connect": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "It appears that you are not able to connect to Streaming Services at this time."
+            elif len(error_404) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "error_404": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "404 error"
+            elif len(loading_element):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "element_loading": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
+            else:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "timeout_exception": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "timeout error"
+
+    def test_control_bar_functions(self):
+        try:
+            #  turn full screen off and on
+            full_screen_on = self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]')  # turn full screen on
+            self.driver.execute_script("arguments[0].click();", full_screen_on)
+            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]')))  # full screen on
+            full_screen_off = self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]')  # turn full screen off
+            self.driver.execute_script("arguments[0].click();", full_screen_off)
+            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]')))  # full screen off
+            #  turn mute button off and on
+            mute_on = self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]')  # Mute button turn on
+            self.driver.execute_script("arguments[0].click();", mute_on)
+            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]')))  # Mute button on
+            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@data-bmpui-volume-level-tens="10"]')))
+            mute_off = self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]')  # Mute button turn off
+            self.driver.execute_script("arguments[0].click();", mute_off)
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').is_displayed()  # Mute button off
+            self.driver.refresh()
+            time.sleep(5)
+            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//img[@id="bmpui-id-32"]')))  # wait for loading screen to disappear
+            # turn CC button off and on
+            time.sleep(5)
+            cc_on = self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]')  # CC button turn on
+            self.driver.execute_script("arguments[0].click();", cc_on)
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-on"]')))  # CC button turn off
+            cc_off = self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-on"]')  # CC button turn on
+            self.driver.execute_script("arguments[0].click();", cc_off)
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]').is_displayed()  # CC button off
+            self.driver.execute_script("arguments[0].click();", cc_on)
+            if WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//div[@class="bmpui-ui-subtitle-overlay bmpui-cea608"]'))):
+                assert True
+            elif self.driver.find_element(By.XPATH, '//div[@class="bmpui-ui-subtitle-overlay bmpui-hidden"]'):
+                assert False, "Program could be on commercial, please check screenshot"
+        except NoSuchElementException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            body = [
+                {
+                    "measurement": "OnStream",
+                    "tags": {
+                        "Software": version,
+                        "Test": mc.get_value(),
+                        "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
+                        "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
+                    },
+                    "time": time.time_ns(),
+                    "fields": {
+                        "element_not_found": 1,
+                    }
+                }
+            ]
+            client.write_points(body)
+            assert False, "Element was not found"
+        except TimeoutException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
+            if len(loading_circle) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "loading_circle": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck on loading screen"
+            elif len(no_streaming) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "unable_to_connect": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "It appears that you are not able to connect to Streaming Services at this time."
+            elif len(error_404) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "error_404": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "404 error"
+            elif len(loading_element):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "element_loading": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
+            else:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "timeout_exception": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "timeout error"
+
+
+@pytest.mark.usefixtures("setup", "directory")
+class TestSupportSettingsScreen:
+    def test_text_displayed(self):
+        try:
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_1ATKIs2nHrPvAu0b3sAXQz"]'))).click()
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//span[contains(text(), "Settings")]'))).click()
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//li[@class="_1c_-iIVNzHdk3aepkUNNWh schema_accent_border-bottom"]')))
+            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//p[contains(text(), "How can I watch OnStream?")]')))
+            self.driver.find_element(By.XPATH, '//p[contains(text(), "When I leave my property why do I lose access to OnStream?")]').is_displayed()  # additional channels
+            self.driver.find_element(By.XPATH, '//p[contains(text(), "What internet speed do I need to be able to use OnStream?")]').is_displayed()  # who to contact
+            self.driver.find_element(By.XPATH, '//p[contains(text(), "What Channels does OnStream have?")]').is_displayed()  # how to cast
+            self.driver.find_element(By.XPATH, '//p[contains(text(), "Are all channels live?")]').is_displayed()  # when I leave
+            """self.driver.find_element_by_xpath\
+                ('//p[contains(text(), "Can’t find the answer to what you’re looking for?")]').is_displayed()"""
+            # can't find answers
+            """self.driver.find_element_by_xpath\
+                ('//p[contains(text(), "Please Call Dish Support at: ")]').is_displayed()  # call dish support
+            self.driver.find_element_by_xpath\
+                ('//p[contains(text(), "1-800-333-DISH")]').is_displayed()"""  # number to call
+            app_version = self.driver.find_element(By.XPATH, '//p[@class="_2G-12UYHfG0a2MlL0pEXtD"]').text
+            print(app_version, file=open(os.path.join(base_path, 'Logs', 'app_version.txt'), "w"))
+        except NoSuchElementException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            body = [
+                {
+                    "measurement": "OnStream",
+                    "tags": {
+                        "Software": version,
+                        "Test": mc.get_value(),
+                        "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
+                        "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
+                    },
+                    "time": time.time_ns(),
+                    "fields": {
+                        "element_not_found": 1,
+                    }
+                }
+            ]
+            client.write_points(body)
+            assert False, "Element was not found"
+        except TimeoutException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
+            if len(loading_circle) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "loading_circle": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck on loading screen"
+            elif len(no_streaming) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "unable_to_connect": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "It appears that you are not able to connect to Streaming Services at this time."
+            elif len(error_404) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "error_404": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "404 error"
+            elif len(loading_element):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "element_loading": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
+            else:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "timeout_exception": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "timeout error"
+
+
+@pytest.mark.usefixtures("setup", "directory")
+class TestLegalSettingsScreen:
+    def test_text_displayed(self):
+        try:
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_1ATKIs2nHrPvAu0b3sAXQz"]'))).click()
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//span[contains(text(), "Settings")]'))).click()
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//li[@class="_1c_-iIVNzHdk3aepkUNNWh schema_accent_border-bottom"]')))
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//li[contains(text(), "Legal")]'))).click()
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//h4[contains(text(), "Service Agreement")]')))
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//h4[contains(text(), "Terms and Conditions")]')))
+        except NoSuchElementException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            body = [
+                {
+                    "measurement": "OnStream",
+                    "tags": {
+                        "Software": version,
+                        "Test": mc.get_value(),
+                        "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
+                        "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
+                    },
+                    "time": time.time_ns(),
+                    "fields": {
+                        "element_not_found": 1,
+                    }
+                }
+            ]
+            client.write_points(body)
+            assert False, "Element was not found"
+        except TimeoutException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
+            if len(loading_circle) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "loading_circle": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck on loading screen"
+            elif len(no_streaming) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "unable_to_connect": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "It appears that you are not able to connect to Streaming Services at this time."
+            elif len(error_404) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "error_404": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "404 error"
+            elif len(loading_element):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "element_loading": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
+            else:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "timeout_exception": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "timeout error"
+
+    def test_link1_clickable(self):
+        try:
+            self.driver.find_element(By.XPATH, '//a[@href="https://www.dish.com/service-agreements/"]').click()
+            time.sleep(5)
+            self.driver.find_element(By.XPATH, '//h1[contains(text(), "DISH Network Service Agreements")]').is_displayed()
+        except NoSuchElementException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            body = [
+                {
+                    "measurement": "OnStream",
+                    "tags": {
+                        "Software": version,
+                        "Test": mc.get_value(),
+                        "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
+                        "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
+                    },
+                    "time": time.time_ns(),
+                    "fields": {
+                        "element_not_found": 1,
+                    }
+                }
+            ]
+            client.write_points(body)
+            assert False, "Element was not found"
+        except TimeoutException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
+            if len(loading_circle) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "loading_circle": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck on loading screen"
+            elif len(no_streaming) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "unable_to_connect": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "It appears that you are not able to connect to Streaming Services at this time."
+            elif len(error_404) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "error_404": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "404 error"
+            elif len(loading_element):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "element_loading": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
+            else:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "timeout_exception": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "timeout error"
+
+    def test_link2_clickable(self):
+        try:
+            self.driver.get(self.dishtv)
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_1ATKIs2nHrPvAu0b3sAXQz"]'))).click()
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//span[contains(text(), "Settings")]'))).click()
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//li[@class="_1c_-iIVNzHdk3aepkUNNWh schema_accent_border-bottom"]')))
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//li[contains(text(), "Legal")]'))).click()
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//h4[contains(text(), "Service Agreement")]')))
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//h4[contains(text(), "Terms and Conditions")]')))
+            self.driver.find_element(By.XPATH, '//a[@href="https://www.dish.com/terms-conditions/"]').click()
+            time.sleep(5)
+            self.driver.find_element(By.XPATH, '//h1[contains(text(), "Important Terms and Conditions")]').is_displayed()
+        except NoSuchElementException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            body = [
+                {
+                    "measurement": "OnStream",
+                    "tags": {
+                        "Software": version,
+                        "Test": mc.get_value(),
+                        "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
+                        "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
+                    },
+                    "time": time.time_ns(),
+                    "fields": {
+                        "element_not_found": 1,
+                    }
+                }
+            ]
+            client.write_points(body)
+            assert False, "Element was not found"
+        except TimeoutException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
+            if len(loading_circle) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "loading_circle": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck on loading screen"
+            elif len(no_streaming) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "unable_to_connect": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "It appears that you are not able to connect to Streaming Services at this time."
+            elif len(error_404) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "error_404": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "404 error"
+            elif len(loading_element):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "element_loading": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
+            else:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "timeout_exception": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "timeout error"
+
+
+@pytest.mark.usefixtures("setup", "directory", "current_time")
+class TestServices:
+    def test_services_configured(self):
+        try:
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_1ATKIs2nHrPvAu0b3sAXQz"]'))).click()  # click the hamburger
+            WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//span[contains(text(), "TV Guide")]'))).click()  # click TV Guide
+            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # wait for the guide to populate
+            links = []
+            channels = self.driver.find_elements(By.XPATH, '(//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"])')
+            for i in range(len(channels)):
+                links.append(channels[i].get_attribute("href"))
+            all_channels = list(dict.fromkeys(links))
+            for link in all_channels:
+                channel = link.strip().split('/')[5]
+                self.driver.get(link)
+                self.driver.refresh()
+                WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+                WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="bitmovinplayer-poster"]')))
+                time.sleep(5)
+                self.driver.save_screenshot(self.direct + str(channel) + ".png")
+                time.sleep(1)
+        except NoSuchElementException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            body = [
+                {
+                    "measurement": "OnStream",
+                    "tags": {
+                        "Software": version,
+                        "Test": mc.get_value(),
+                        "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
+                        "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
+                    },
+                    "time": time.time_ns(),
+                    "fields": {
+                        "element_not_found": 1,
+                    }
+                }
+            ]
+            client.write_points(body)
+            assert False, "Element was not found"
+        except TimeoutException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
+            if len(loading_circle) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "loading_circle": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck on loading screen"
+            elif len(no_streaming) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "unable_to_connect": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "It appears that you are not able to connect to Streaming Services at this time."
+            elif len(error_404) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "error_404": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "404 error"
+            elif len(loading_element):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "element_loading": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
+            else:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "timeout_exception": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "timeout error"

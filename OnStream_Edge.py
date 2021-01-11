@@ -17,7 +17,7 @@ from Edge_Thread import version, mc, ChannelCount
 from msedge.selenium_tools import EdgeOptions
 from selenium.webdriver.edge.service import Service
 
-testrun = '1.0.8'
+testrun = '1.0.9'
 
 try:
     base_path = os.environ['ONSTREAM_HOME']

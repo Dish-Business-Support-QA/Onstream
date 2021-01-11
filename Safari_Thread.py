@@ -1,5 +1,6 @@
 import os
 import subprocess
+import platform
 from threading import Thread
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -16,6 +17,9 @@ try:
 except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
+plat = platform.platform().split('-')
+device = str(plat[0])
+device_software = str(plat[1])
 version = '1.2.27'
 
 
@@ -57,7 +61,7 @@ class CountRun:
 
 class ChannelChange:
     def __init__(self):
-        self.change = 50
+        self.change = 100
 
     def get_number(self):
         return self.change

@@ -12,9 +12,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime, timedelta
 from influxdb import InfluxDBClient
-from Safari_Thread import version, mc, ChannelCount
+from Safari_Thread import version, mc, ChannelCount, device, device_software
 
-testrun = '1.0.5'
+testrun = '1.0.10'
 
 try:
     base_path = os.environ['ONSTREAM_HOME']
@@ -174,8 +174,7 @@ class ActionChains(webdriver.ActionChains):
 class TestVersion:
     def test_version(self):
         try:
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]')))
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]')))
             self.driver.find_element(By.XPATH, '//a[@role="button"]').click()
             self.driver.find_element(By.XPATH, '//a[@class="_1jBpd9Hw7kDuuvGVNTNlax schema_accent_background_hover"]')
             WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
@@ -192,8 +191,10 @@ class TestVersion:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -205,10 +206,8 @@ class TestVersion:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -220,8 +219,10 @@ class TestVersion:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -239,8 +240,10 @@ class TestVersion:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -258,8 +261,10 @@ class TestVersion:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -277,8 +282,10 @@ class TestVersion:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -296,8 +303,10 @@ class TestVersion:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -315,8 +324,10 @@ class TestVersion:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -356,8 +367,10 @@ class TestHomeScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -369,10 +382,8 @@ class TestHomeScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -384,8 +395,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -403,8 +416,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -422,8 +437,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -441,8 +458,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -460,8 +479,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -479,8 +500,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -515,8 +538,10 @@ class TestHomeScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -528,10 +553,8 @@ class TestHomeScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -543,8 +566,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -562,8 +587,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -581,8 +608,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -600,8 +629,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -619,8 +650,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -638,8 +671,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -673,8 +708,10 @@ class TestHomeScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -686,10 +723,8 @@ class TestHomeScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -701,8 +736,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -720,8 +757,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -739,8 +778,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -758,8 +799,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -777,8 +820,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -796,8 +841,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -828,8 +875,10 @@ class TestHomeScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -841,10 +890,8 @@ class TestHomeScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -856,8 +903,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -875,8 +924,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -894,8 +945,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -913,8 +966,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -932,8 +987,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -951,8 +1008,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -993,8 +1052,10 @@ class TestHomeScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1006,10 +1067,8 @@ class TestHomeScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -1021,8 +1080,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1040,8 +1101,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1059,8 +1122,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1078,8 +1143,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1097,8 +1164,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1116,8 +1185,10 @@ class TestHomeScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1133,10 +1204,8 @@ class TestHomeScreen:
 class TestGuideScreen:
     def test_images_displayed(self):
         try:
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//div[@class="_3s9BHby87YFunQATlfDFIG _13zgmvI0VzaLaUVl9-7siJ"]')))
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="_3s9BHby87YFunQATlfDFIG _13zgmvI0VzaLaUVl9-7siJ"]')))
             self.driver.find_element(By.XPATH, '//div[@class="_1oUh3apnwdwzBiB_Uw6seb "]').is_displayed()  # banner
             self.driver.find_element(By.XPATH, '//img[@alt="Dish Logo"]').is_displayed()  # dish
             self.driver.find_element(By.XPATH, '//img[@alt="Dish Logo"]').is_displayed()  # custom_logo
@@ -1153,8 +1222,10 @@ class TestGuideScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1166,10 +1237,8 @@ class TestGuideScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -1181,8 +1250,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1200,8 +1271,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1219,8 +1292,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1238,8 +1313,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1257,8 +1334,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1276,8 +1355,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1306,8 +1387,10 @@ class TestGuideScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1319,10 +1402,8 @@ class TestGuideScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -1334,8 +1415,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1353,8 +1436,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1372,8 +1457,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1391,8 +1478,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1410,8 +1499,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1429,8 +1520,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1458,8 +1551,10 @@ class TestGuideScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1471,10 +1566,8 @@ class TestGuideScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -1486,8 +1579,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1505,8 +1600,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1524,8 +1621,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1543,8 +1642,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1562,8 +1663,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1581,8 +1684,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1610,8 +1715,10 @@ class TestGuideScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1623,10 +1730,8 @@ class TestGuideScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -1638,8 +1743,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1657,8 +1764,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1676,8 +1785,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1694,8 +1805,11 @@ class TestGuideScreen:
                         "tags": {
                             "Software": version,
                             "Test": mc.get_value(),
-                            "URL": ChannelCount.dishtv, 
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1713,8 +1827,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1732,8 +1848,10 @@ class TestGuideScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1772,8 +1890,10 @@ class TestSideBarScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1785,10 +1905,8 @@ class TestSideBarScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -1800,8 +1918,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1819,8 +1939,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1838,8 +1960,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1857,8 +1981,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1876,8 +2002,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1895,8 +2023,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1927,8 +2057,10 @@ class TestSideBarScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1940,10 +2072,8 @@ class TestSideBarScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -1955,8 +2085,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1974,8 +2106,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1993,8 +2127,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2012,8 +2148,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2031,8 +2169,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2050,8 +2190,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2080,8 +2222,10 @@ class TestSideBarScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2093,10 +2237,8 @@ class TestSideBarScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -2108,8 +2250,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2127,8 +2271,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2146,8 +2292,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2165,8 +2313,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2184,8 +2334,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2203,8 +2355,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2236,8 +2390,10 @@ class TestSideBarScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2249,10 +2405,8 @@ class TestSideBarScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -2264,8 +2418,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2283,8 +2439,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2302,8 +2460,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2321,8 +2481,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2340,8 +2502,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2359,8 +2523,10 @@ class TestSideBarScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2422,8 +2588,10 @@ class TestLiveTV:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2435,10 +2603,8 @@ class TestLiveTV:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -2450,8 +2616,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2469,8 +2637,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2488,8 +2658,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2507,8 +2679,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2526,8 +2700,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2545,8 +2721,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2583,8 +2761,10 @@ class TestLiveTV:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2596,10 +2776,8 @@ class TestLiveTV:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -2611,8 +2789,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2630,8 +2810,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2649,8 +2831,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2668,8 +2852,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2687,8 +2873,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2706,8 +2894,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2752,8 +2942,10 @@ class TestLiveTV:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2765,10 +2957,8 @@ class TestLiveTV:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -2780,8 +2970,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2799,8 +2991,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2818,8 +3012,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2837,8 +3033,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2856,8 +3054,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2875,8 +3075,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2921,8 +3123,10 @@ class TestLiveTV:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2934,10 +3138,8 @@ class TestLiveTV:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -2949,8 +3151,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2968,8 +3172,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2987,8 +3193,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3006,8 +3214,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3025,8 +3235,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3044,8 +3256,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3106,8 +3320,10 @@ class TestLiveTV:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3119,10 +3335,8 @@ class TestLiveTV:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -3134,8 +3348,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3153,8 +3369,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3172,8 +3390,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3191,8 +3411,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3210,8 +3432,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3229,8 +3453,10 @@ class TestLiveTV:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3261,8 +3487,10 @@ class TestSupportSettingsScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3274,10 +3502,8 @@ class TestSupportSettingsScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -3289,8 +3515,10 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3308,8 +3536,10 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3327,8 +3557,10 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3346,8 +3578,10 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3365,8 +3599,10 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3384,8 +3620,10 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3426,8 +3664,10 @@ class TestSupportSettingsScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3439,10 +3679,8 @@ class TestSupportSettingsScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -3454,8 +3692,10 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3473,8 +3713,10 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3492,8 +3734,10 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3511,8 +3755,10 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3530,8 +3776,10 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3549,8 +3797,10 @@ class TestSupportSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3582,8 +3832,10 @@ class TestLegalSettingsScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3595,10 +3847,8 @@ class TestLegalSettingsScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -3610,8 +3860,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3629,8 +3881,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3648,8 +3902,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3667,8 +3923,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3686,8 +3944,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3705,8 +3965,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3735,8 +3997,10 @@ class TestLegalSettingsScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3748,10 +4012,8 @@ class TestLegalSettingsScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -3763,8 +4025,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3782,8 +4046,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3801,8 +4067,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3820,8 +4088,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3839,8 +4109,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3858,8 +4130,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3884,8 +4158,10 @@ class TestLegalSettingsScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3897,10 +4173,8 @@ class TestLegalSettingsScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -3912,8 +4186,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3931,8 +4207,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3950,8 +4228,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3969,8 +4249,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3988,8 +4270,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4007,8 +4291,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4040,8 +4326,10 @@ class TestLegalSettingsScreen:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -4053,10 +4341,8 @@ class TestLegalSettingsScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH, 
-                '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH, 
-                '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
             went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
@@ -4068,8 +4354,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4087,8 +4375,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4106,8 +4396,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4125,8 +4417,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4144,8 +4438,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4163,8 +4459,10 @@ class TestLegalSettingsScreen:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4192,10 +4490,8 @@ class TestServices:
                 channel = link.strip().split('/')[5]
                 self.driver.get(link)
                 self.driver.refresh()
-                WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located(
-                    (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
-                WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                    (By.XPATH, '//div[@class="bitmovinplayer-poster"]')))
+                WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+                WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="bitmovinplayer-poster"]')))
                 time.sleep(5)
                 self.driver.save_screenshot(self.direct + str(channel) + ".png")
         except NoSuchElementException:
@@ -4207,8 +4503,10 @@ class TestServices:
                         "Software": version,
                         "Test": mc.get_value(),
                         "Pytest": self.name,
-                        "URL": ChannelCount.dishtv, 
+                        "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
+                        "Device": device,
+                        "Device_Software": device_software,
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -4233,8 +4531,10 @@ class TestServices:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4252,8 +4552,10 @@ class TestServices:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4271,8 +4573,10 @@ class TestServices:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4290,8 +4594,10 @@ class TestServices:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4309,8 +4615,10 @@ class TestServices:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4328,8 +4636,10 @@ class TestServices:
                             "Software": version,
                             "Test": mc.get_value(),
                             "Pytest": self.name,
-                            "URL": ChannelCount.dishtv, 
+                            "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
+                            "Device": device,
+                            "Device_Software": device_software,
                         },
                         "time": time.time_ns(),
                         "fields": {

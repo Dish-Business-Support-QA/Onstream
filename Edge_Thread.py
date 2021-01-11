@@ -19,6 +19,9 @@ try:
 except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
+plat = platform.platform().split('-')
+device = str(plat[0])
+device_software = str(plat[1])
 version = '1.2.27'
 
 
@@ -63,7 +66,7 @@ class CountRun:
 
 class ChannelChange:
     def __init__(self):
-        self.change = 200
+        self.change = 100
 
     def get_number(self):
         return self.change
@@ -78,7 +81,7 @@ def pytest_run():
     while int(len(channels)) < int(cc.get_number()):
         mc.increment()
         mc.save_value()
-        subprocess.run(['pytest', '--pytest-influxdb', '--influxdb_project=Chrome', '--influxdb_run_id=' + str(mc.get_value()), os.path.join(test_path, 'OnStream_Edge.py'), '-sv'])
+        subprocess.run(['pytest', '--pytest-influxdb', '--influxdb_project=Edge', '--influxdb_run_id=' + str(mc.get_value()), os.path.join(test_path, 'OnStream_Edge.py'), '-sv'])
         channels = ChannelCount.all_channels + channels
 
 

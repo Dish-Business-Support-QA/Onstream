@@ -19,6 +19,9 @@ try:
 except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
+plat = platform.platform().split('-')
+device = str(plat[0])
+device_software = str(plat[1])
 version = '1.2.27'
 
 

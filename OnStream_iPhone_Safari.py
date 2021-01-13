@@ -1,7 +1,6 @@
 import os
 import subprocess
 import pytest
-import json
 import time
 import shutil
 from appium import webdriver

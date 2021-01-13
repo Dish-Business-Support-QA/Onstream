@@ -2039,8 +2039,7 @@ class TestSideBarScreen:
     def test_text_displayed(self):
         try:
             """self.driver.find_element(By.XPATH, '//div[@class="_1JoT790R-w1p_Jv3yX7LrI"]').is_displayed()  # channel name"""
-            self.driver.find_element(By.XPATH, '//div[@class="QJgwfXrH2X5_BIUd7kMnu"]').is_displayed()
-            # event name and time
+            self.driver.find_element(By.XPATH, '//div[@class="QJgwfXrH2X5_BIUd7kMnu"]').is_displayed()  # event name and time
             self.driver.find_element(By.XPATH, '//div[@class="_1AhFoq9LRVrQE0BrdpGozJ schema_epgTimelineColors_background"]').is_displayed()  # TODAY
             self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now).is_displayed()  # Time 1
             self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now1).is_displayed()  # Time 2
@@ -2205,11 +2204,9 @@ class TestSideBarScreen:
 
     def test_buttons_displayed(self):
         try:
-            self.driver.find_element(By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]').is_displayed()
-            # exit button
+            self.driver.find_element(By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]').is_displayed()  # exit button
             self.driver.find_element(By.XPATH, '//span[contains(text(), "WATCH LIVE")]').is_displayed()  # Watch Live
-            self.driver.find_element(By.XPATH, '//div[@class="_12Yya3OL4XVr3adIektRU6"]').is_displayed()
-            # more info button
+            self.driver.find_element(By.XPATH, '//div[@class="_12Yya3OL4XVr3adIektRU6"]').is_displayed()  # more info button
             self.driver.find_element(By.XPATH, '//a[contains(@href,"home")]').is_displayed()  # home button
             self.driver.find_element(By.XPATH, '//a[@class="_2r6Lq2AYJyfbZABtJvL0D_"]').is_displayed()  # Setting Cog
         except NoSuchElementException:
@@ -2378,8 +2375,7 @@ class TestSideBarScreen:
             self.driver.find_element(By.XPATH, '//a[@class="_2r6Lq2AYJyfbZABtJvL0D_"]').is_enabled()  # Setting Cog
             self.driver.find_element(By.XPATH, '//span[contains(text(), "WATCH LIVE")]').is_enabled()  # Watch Live
             self.driver.find_element(By.XPATH, '//span[contains(text(), "WATCH LIVE")]').click()  # Watch Live
-            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
-                (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [

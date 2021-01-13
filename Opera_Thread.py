@@ -7,7 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
-from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.opera import OperaDriverManager
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.service import Service
 
@@ -27,10 +27,7 @@ version = '1.2.28'
 
 
 class ChannelCount(object):
-    caps = DesiredCapabilities.CHROME
-    caps['goog:loggingPrefs'] = {'performance': 'ALL'}
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, desired_capabilities=caps)
+    driver = webdriver.Opera(executable_path=OperaDriverManager().install())
     dishtv = "https://test.watchdishtv.com/"
     driver.get(dishtv)
     WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
@@ -102,7 +99,7 @@ def pytest_run():
     while int(len(channels)) < int(cc.get_number()):
         mc.increment()
         mc.save_value()
-        subprocess.run(['pytest', '--pytest-influxdb', '--influxdb_project=Chrome', '--influxdb_run_id=' + str(mc.get_value()), os.path.join(test_path, 'OnStream_Chrome.py'), '-sv'])
+        subprocess.run(['pytest', '--pytest-influxdb', '--influxdb_project=Chrome', '--influxdb_run_id=' + str(mc.get_value()), os.path.join(test_path, 'OnStream_Opera.py'), '-sv'])
         channels = ChannelCount.all_channels + channels
 
 

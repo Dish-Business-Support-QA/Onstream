@@ -12,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from influxdb import InfluxDBClient
-from iPhone_Safari_Thread import version, mc, ChannelCount, device, device_software, GetService
+from iPhone_Safari_Thread import version, mc, ChannelCount, device, GetService
 
 testrun = '1.2.1'
 
@@ -51,7 +51,7 @@ def auto_start(request):
                 "URL": ChannelCount.dishtv,
                 "Browser": "Safari",
                 "Device": device,
-                "Device_Software": device_software,
+                
             },
             "time": time.time_ns(),
             "fields": {
@@ -73,7 +73,7 @@ def auto_start(request):
                     "URL": ChannelCount.dishtv,
                     "Browser": "Safari",
                     "Device": device,
-                    "Device_Software": device_software,
+                    
                 },
                 "time": time.time_ns(),
                 "fields": {
@@ -189,7 +189,7 @@ class TestVersion:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -217,7 +217,7 @@ class TestVersion:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -238,7 +238,7 @@ class TestVersion:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -259,7 +259,7 @@ class TestVersion:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -280,7 +280,7 @@ class TestVersion:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -301,7 +301,7 @@ class TestVersion:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -322,7 +322,7 @@ class TestVersion:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -364,7 +364,7 @@ class TestHomeScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -392,7 +392,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -413,7 +413,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -434,7 +434,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -455,7 +455,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -476,7 +476,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -497,7 +497,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -533,7 +533,7 @@ class TestHomeScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -561,7 +561,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -582,7 +582,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -603,7 +603,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -624,7 +624,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -645,7 +645,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -666,7 +666,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -700,7 +700,7 @@ class TestHomeScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -728,7 +728,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -749,7 +749,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -770,7 +770,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -791,7 +791,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -812,7 +812,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -833,7 +833,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -876,7 +876,7 @@ class TestHomeScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -904,7 +904,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -925,7 +925,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -946,7 +946,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -967,7 +967,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -988,7 +988,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1009,7 +1009,7 @@ class TestHomeScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1046,7 +1046,7 @@ class TestGuideScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1074,7 +1074,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1095,7 +1095,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1116,7 +1116,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1137,7 +1137,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1158,7 +1158,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1179,7 +1179,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1211,7 +1211,7 @@ class TestGuideScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1239,7 +1239,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1260,7 +1260,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1281,7 +1281,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1302,7 +1302,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1323,7 +1323,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1344,7 +1344,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1370,7 +1370,7 @@ class TestGuideScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1398,7 +1398,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1419,7 +1419,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1440,7 +1440,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1461,7 +1461,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1482,7 +1482,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1503,7 +1503,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1529,7 +1529,7 @@ class TestGuideScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1557,7 +1557,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1578,7 +1578,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1599,7 +1599,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1620,7 +1620,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1641,7 +1641,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1662,7 +1662,7 @@ class TestGuideScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1721,7 +1721,7 @@ class TestSideBarScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1749,7 +1749,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1770,7 +1770,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1791,7 +1791,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1812,7 +1812,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1833,7 +1833,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1854,7 +1854,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1883,7 +1883,7 @@ class TestSideBarScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -1911,7 +1911,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1932,7 +1932,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1953,7 +1953,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1974,7 +1974,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -1995,7 +1995,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2016,7 +2016,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2043,7 +2043,7 @@ class TestSideBarScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2071,7 +2071,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2092,7 +2092,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2113,7 +2113,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2134,7 +2134,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2155,7 +2155,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2176,7 +2176,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2203,7 +2203,7 @@ class TestSideBarScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2231,7 +2231,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2252,7 +2252,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2273,7 +2273,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2294,7 +2294,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2315,7 +2315,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2336,7 +2336,7 @@ class TestSideBarScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2401,7 +2401,7 @@ class TestLiveTV:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2429,7 +2429,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2450,7 +2450,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2471,7 +2471,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2492,7 +2492,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2513,7 +2513,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2534,7 +2534,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2570,7 +2570,7 @@ class TestLiveTV:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2598,7 +2598,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2619,7 +2619,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2640,7 +2640,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2661,7 +2661,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2682,7 +2682,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2703,7 +2703,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2734,7 +2734,7 @@ class TestLiveTV:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2762,7 +2762,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2783,7 +2783,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2804,7 +2804,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2825,7 +2825,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2846,7 +2846,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2867,7 +2867,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2898,7 +2898,7 @@ class TestLiveTV:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -2926,7 +2926,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2947,7 +2947,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2968,7 +2968,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -2989,7 +2989,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3010,7 +3010,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3031,7 +3031,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3088,7 +3088,7 @@ class TestLiveTV:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3116,7 +3116,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3137,7 +3137,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3158,7 +3158,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3179,7 +3179,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3200,7 +3200,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3221,7 +3221,7 @@ class TestLiveTV:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3266,7 +3266,7 @@ class TestSupportSettingsScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3294,7 +3294,7 @@ class TestSupportSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3315,7 +3315,7 @@ class TestSupportSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3336,7 +3336,7 @@ class TestSupportSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3357,7 +3357,7 @@ class TestSupportSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3378,7 +3378,7 @@ class TestSupportSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3399,7 +3399,7 @@ class TestSupportSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3433,7 +3433,7 @@ class TestLegalSettingsScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3461,7 +3461,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3482,7 +3482,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3503,7 +3503,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3524,7 +3524,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3545,7 +3545,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3566,7 +3566,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3594,7 +3594,7 @@ class TestLegalSettingsScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3622,7 +3622,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3643,7 +3643,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3664,7 +3664,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3685,7 +3685,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3706,7 +3706,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3727,7 +3727,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3762,7 +3762,7 @@ class TestLegalSettingsScreen:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3790,7 +3790,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3811,7 +3811,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3832,7 +3832,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3853,7 +3853,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3874,7 +3874,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3895,7 +3895,7 @@ class TestLegalSettingsScreen:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3944,7 +3944,7 @@ class TestServices:
                         "URL": ChannelCount.dishtv,
                         "Browser": "Safari",
                         "Device": device,
-                        "Device_Software": device_software,
+                        
                     },
                     "time": time.time_ns(),
                     "fields": {
@@ -3972,7 +3972,7 @@ class TestServices:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -3993,7 +3993,7 @@ class TestServices:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4014,7 +4014,7 @@ class TestServices:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4035,7 +4035,7 @@ class TestServices:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4056,7 +4056,7 @@ class TestServices:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {
@@ -4077,7 +4077,7 @@ class TestServices:
                             "URL": ChannelCount.dishtv,
                             "Browser": "Safari",
                             "Device": device,
-                            "Device_Software": device_software,
+                            
                         },
                         "time": time.time_ns(),
                         "fields": {

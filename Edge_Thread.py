@@ -1,6 +1,7 @@
 import os
 import subprocess
 import platform
+import pandas as pd
 from threading import Thread
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -21,8 +22,7 @@ except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
 plat = platform.platform().split('-')
-device = str(plat[0])
-device_software = str(plat[1])
+device = str(plat[0] + "-" + plat[1])
 version = '1.2.28'
 
 
@@ -41,7 +41,27 @@ class ChannelCount(object):
     for i in range(len(channels)):
         links.append(channels[i].get_attribute("href"))
     all_channels = list(dict.fromkeys(links))
+    first_channel = all_channels[0].split('/')[5]
     driver.quit()
+
+
+class GetService(object):
+    url = r'http://uplink.jameslong.name/chan1000.html'
+    tables = pd.read_html(url)
+    s = tables[1]
+    s = s.drop(s.index[0])
+    service = s.iloc[:, 0:2]
+    service.to_csv(r'/Users/dishbusiness/Desktop/OnStreamTestFiles/Logs/dish_channel_list.csv', header=["Service_Number", "Call_Letters"], index=False)
+    service_number = float(ChannelCount.first_channel)
+    df = pd.read_csv(r'/Users/dishbusiness/Desktop/OnStreamTestFiles/Logs/dish_channel_list.csv')
+    try:
+        call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
+        call_letters = str(call_letters)
+    except IndexError:
+        second_channel = ChannelCount.all_channels[1].split('/')[5]
+        service_number = float(second_channel)
+        call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
+        call_letters = str(call_letters)
 
 
 class CountRun:

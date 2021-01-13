@@ -19,8 +19,7 @@ except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
 version = '1.2.28'
-device = 'iPhone 8'
-device_software = '14.3'
+device = 'iPhone 8-14.3'
 
 
 class ChannelCount(object):
@@ -30,9 +29,9 @@ class ChannelCount(object):
     desired_caps['xcodeOrgId'] = 'QPWT4523KW'
     desired_caps['xcodeSigningId'] = 'iPhone Developer'
     desired_caps['platformName'] = 'iOS'
-    desired_caps['deviceName'] = device
+    desired_caps['deviceName'] = 'iPhone 8'
     desired_caps['automationName'] = 'XCUITest'
-    desired_caps['platformVersion'] = device_software
+    desired_caps['platformVersion'] = '14.3'
     desired_caps['browserName'] = 'Safari'
     desired_caps['udid'] = '010c4b573b786d85098a89de6e1b47b79d612d14'
     desired_caps['showXcodeLog'] = True

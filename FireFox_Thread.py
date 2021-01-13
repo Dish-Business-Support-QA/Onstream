@@ -22,13 +22,13 @@ except KeyError:
 plat = platform.platform().split('-')
 device = str(plat[0])
 device_software = str(plat[1])
-version = '1.2.27'
+version = '1.2.28'
 
 
 class ChannelCount(object):
     service = Service(GeckoDriverManager().install())
     driver = webdriver.Firefox(service=service)
-    dishtv = "https://watchdishtv.com/"
+    dishtv = "https://test.watchdishtv.com/"
     driver.get(dishtv)
     WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
     WebDriverWait(driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))

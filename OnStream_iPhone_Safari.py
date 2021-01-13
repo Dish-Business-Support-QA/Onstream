@@ -2718,7 +2718,7 @@ class TestLiveTV:
     def test_buttons_displayed(self):
         try:
             self.driver.find_element(By.XPATH, '//button[@class="_39NOsnyu1z9yTrkzCAlapF"]').is_displayed()  # Full TV Guide back button
-            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').is_displayed()  # Mute button
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]').is_displayed()  # Mute button
             self.driver.find_element(By.XPATH, '//div[@class="bmpui-seekbar-markers"]').is_displayed()  # Seeker Bar
             self.driver.find_element(By.XPATH, '//button[@id="bmpui-id-18"]').is_displayed()  # Cast button
             self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]').is_displayed()  # Closed Caption button
@@ -2882,7 +2882,7 @@ class TestLiveTV:
     def test_buttons_enabled(self):
         try:
             self.driver.find_element(By.XPATH, '//button[@class="_39NOsnyu1z9yTrkzCAlapF"]').is_enabled()  # Full TV Guide back button
-            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').is_enabled()  # Mute button
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]').is_enabled()  # Mute button
             self.driver.find_element(By.XPATH, '//div[@class="bmpui-seekbar-markers"]').is_enabled()  # Seeker Bar
             self.driver.find_element(By.XPATH, '//button[@id="bmpui-id-18"]').is_enabled()  # Cast button
             self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]').is_enabled()  # Closed Caption button
@@ -3053,13 +3053,13 @@ class TestLiveTV:
             self.driver.execute_script("arguments[0].click();", full_screen_off)
             WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]')))  # full screen off
             #  turn mute button off and on
-            mute_on = self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]')  # Mute button turn on
-            self.driver.execute_script("arguments[0].click();", mute_on)
-            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]')))  # Mute button on
             WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@data-bmpui-volume-level-tens="10"]')))
-            mute_off = self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]')  # Mute button turn off
+            mute_on = self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]')  # Mute button turn on
+            self.driver.execute_script("arguments[0].click();", mute_on)
+            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]')))  # Mute button on
+            mute_off = self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]')  # Mute button turn off
             self.driver.execute_script("arguments[0].click();", mute_off)
-            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').is_displayed()  # Mute button off
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]').is_displayed()  # Mute button off
             self.driver.refresh()
             time.sleep(5)
             WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
@@ -3924,9 +3924,13 @@ class TestServices:
                 channel = link.strip().split('/')[5]
                 self.driver.get(link)
                 self.driver.refresh()
+                if WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="TGyzX_NHJqx9WzvYDiQ5g"]'))).is_enabled():
+                    self.driver.find_element(By.XPATH, '//button[@class="TGyzX_NHJqx9WzvYDiQ5g"]').click()
+                else:
+                    pass
                 WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
                 WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="bitmovinplayer-poster"]')))
-                time.sleep(5)
+                time.sleep(9)
                 self.driver.save_screenshot(self.direct + str(channel) + ".png")
                 time.sleep(1)
         except NoSuchElementException:

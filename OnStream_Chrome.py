@@ -2731,7 +2731,7 @@ class TestLiveTV:
             self.driver.find_element(By.XPATH, '//div[@class="_12Yya3OL4XVr3adIektRU6"]').is_displayed()
             # Mini Guide More Info button
             self.driver.find_element(By.XPATH, '//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]').is_displayed()  # play button
-            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').is_displayed()
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]').is_displayed()
             # Mute button
             self.driver.find_element(By.XPATH, '//div[@class="bmpui-seekbar-markers"]').is_displayed()  # Seeker Bar
             """self.driver.find_element_by_xpath \
@@ -2900,7 +2900,7 @@ class TestLiveTV:
             self.driver.find_element(By.XPATH, '//div[@class="_12Yya3OL4XVr3adIektRU6"]').is_enabled()
             # Mini Guide More Info button
             self.driver.find_element(By.XPATH, '//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]').is_enabled()  # play button
-            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').is_enabled()
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]').is_enabled()
             # Mute button
             self.driver.find_element(By.XPATH, '//div[@class="bmpui-seekbar-markers"]').is_enabled()  # Seeker Bar
             """self.driver.find_element_by_xpath \
@@ -3059,28 +3059,23 @@ class TestLiveTV:
     def test_control_bar_functions(self):
         try:
             #  turn mute button off and on
-            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').click()
-            # Mute button turn on
-            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]').is_displayed()  # Mute button on
             WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//button[@data-bmpui-volume-level-tens="10"]')))
-            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]').click()  # Mute button turn off
-            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]')\
-                .is_displayed()  # Mute button off
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]').click()  # Mute button turn on
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').is_displayed()  # Mute button on
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-muted"]').click()  # Mute button turn off
+            self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-volumetogglebutton bmpui-unmuted"]').is_displayed()  # Mute button off
             # volume slider bar
             slider = WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="bmpui-ui-volumeslider"]')))
             ActionChains(self.driver).click_and_hold(slider).move_by_offset(10, 0).release().perform()
-            if WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                    (By.XPATH, '(//div[@aria-valuenow="55"])'))):
+            if WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '(//div[@aria-valuenow="55"])'))):
                 assert True
             else:
                 assert False, "Volume did not increase on the slider volume bar"
             #  turn full screen off and on
             self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]').click()  # turn full screen on
-            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                (By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]')))  # full screen on
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]')))  # full screen on
             self.driver.find_element(By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-on"]').click()  # turn full screen off
-            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located(
-                (By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]')))  # full screen off
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="bmpui-ui-fullscreentogglebutton bmpui-off"]')))  # full screen off
             # turn CC button off and on
             if WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]'))):
                 WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="bmpui-ui-cctogglebutton bmpui-off"]'))).click()  # CC button turn on
@@ -4188,6 +4183,10 @@ class TestServices:
                 channel = link.strip().split('/')[5]
                 self.driver.get(link)
                 self.driver.refresh()
+                if WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="TGyzX_NHJqx9WzvYDiQ5g"]'))).is_enabled():
+                    self.driver.find_element(By.XPATH, '//button[@class="TGyzX_NHJqx9WzvYDiQ5g"]').click()
+                else:
+                    pass
                 WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located(
                     (By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
                 WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(

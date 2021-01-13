@@ -20,7 +20,7 @@ try:
 except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
-version = '1.2.27'
+version = '1.2.28'
 device = 'iPhone 8'
 device_software = '14.3'
 
@@ -43,7 +43,7 @@ class ChannelCount(object):
     desired_caps['safariAllowPopups'] = True
     desired_caps['safariOpenLinksInBackground'] = True
     driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
-    dishtv = "https://watchdishtv.com/"
+    dishtv = "https://test.watchdishtv.com/"
     driver.get(dishtv)
     WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_1ATKIs2nHrPvAu0b3sAXQz"]'))).click()
     WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//span[contains(text(), "TV Guide")]'))).click()

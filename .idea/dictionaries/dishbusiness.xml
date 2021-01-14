@@ -2,6 +2,10 @@
   <dictionary name="dishbusiness">
     <words>
       <w>dishtv</w>
+      <w>edgedriver</w>
+      <w>firefoxdriver</w>
+      <w>operadriver</w>
+      <w>safaridriver</w>
       <w>suny</w>
       <w>testrun</w>
     </words>

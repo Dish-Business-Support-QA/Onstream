@@ -116,6 +116,7 @@ You will then need to import the Evolve dashboard. Follow the below steps:
 *  Select the +
 *  Select Import
 *  Select Upload JSON file
-*  Use the Onstream-%s.json in the repository % this number will change as the Grafana dashboard is modifiyed. Use the one in the Github repo
+*  Use the Onstream-%s.json in the repository
+** % this number will change as the Grafana dashboard is modifiyed. Use the one in the Github repo
 *  Use the newly created Evolve InfluxDB data source
 * Select Import

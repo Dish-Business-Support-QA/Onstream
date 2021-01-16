@@ -14,7 +14,7 @@ from selenium.webdriver.common.keys import Keys
 from influxdb import InfluxDBClient
 from iPad_Safari_Thread import version, mc, ChannelCount, device, device_software, GetService
 
-testrun = '1.2.1'
+testrun = '1.2.5'
 
 try:
     base_path = os.environ['ONSTREAM_HOME']

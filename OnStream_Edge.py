@@ -17,7 +17,7 @@ from Edge_Thread import version, mc, ChannelCount, device, GetService
 from msedge.selenium_tools import EdgeOptions
 from selenium.webdriver.edge.service import Service
 
-testrun = '1.0.9'
+testrun = '2.0.1'
 
 try:
     base_path = os.environ['ONSTREAM_HOME']
@@ -155,6 +155,7 @@ def current_time(request):
     t1 = datetime.now() + timedelta(hours=1)
     t2 = datetime.now() + timedelta(hours=2)
     t3 = datetime.now() + timedelta(hours=3)
+    t4 = datetime.now() + timedelta(hours=4)
 
     if datetime.now().strftime('%M') < str(30):
         m = str("{0:0>2}".format(0))
@@ -164,10 +165,12 @@ def current_time(request):
     now1 = t1.strftime('%-I:' + m)
     now2 = t2.strftime('%-I:' + m)
     now3 = t3.strftime('%-I:' + m)
+    now4 = t4.strftime('%-I:' + m)
     request.cls.now = now
     request.cls.now1 = now1
     request.cls.now2 = now2
     request.cls.now3 = now3
+    request.cls.now4 = now4
     yield
 
 
@@ -1017,8 +1020,9 @@ class TestHomeScreen:
 
     def test_link_clickable(self):
         try:
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 null"]'))).click()  # learn more
+            learn_more = self.driver.find_element(By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 null"]')  # Learn More
+            self.driver.execute_script('arguments[0].scrollIntoView(true);', learn_more)  # Scroll Down to the Bottom
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 null"]'))).click()  # Learn More
             while True:
                 if len(self.driver.window_handles) == 1:  # see if a tab is open
                     print("no tab")
@@ -1684,6 +1688,174 @@ class TestGuideScreen:
             # more info button
             self.driver.find_element(By.XPATH, '//a[contains(@href,"home")]').is_enabled()  # home button
             self.driver.find_element(By.XPATH, '//a[@class="_2r6Lq2AYJyfbZABtJvL0D_"]').is_enabled()  # Setting Cog
+        except NoSuchElementException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            body = [
+                {
+                    "measurement": "OnStream",
+                    "tags": {
+                        "Software": version,
+                        "Test": mc.get_value(),
+                        "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
+                        "Browser": "Edge",
+                        "Device": device,
+                    },
+                    "time": time.time_ns(),
+                    "fields": {
+                        "element_not_found": 1,
+                    }
+                }
+            ]
+            client.write_points(body)
+            assert False, "Element was not found"
+        except TimeoutException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            loading_circle = self.driver.find_elements(By.XPATH,
+                                                       '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH,
+                                                     '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_elements(By.XPATH,
+                                                   '//h2[contains(text(), "Something went wrong with the stream.")]')
+            if len(loading_circle) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Edge",
+                            "Device": device,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "loading_circle": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck on loading screen"
+            elif len(no_streaming) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Edge",
+                            "Device": device,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "unable_to_connect": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "It appears that you are not able to connect to Streaming Services at this time."
+            elif len(error_404) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Edge",
+                            "Device": device,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "error_404": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "404 error"
+            elif len(loading_element):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Edge",
+                            "Device": device,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "element_loading": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Edge",
+                            "Device": device,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
+            else:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Edge",
+                            "Device": device,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "timeout_exception": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "timeout error"
+    
+    def test_guide_function(self):
+        try:
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]'))).click()  # Click on the Right Arrow
+            WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[contains(text(), "%s")]' % self.now)))  # Make Sure the Current Time is not Visible
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now4).is_displayed()  # Time 4
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="_1707eBDJu9YjB5cHLPrnFG"]'))).click()  # Click on the Left Arrow
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now).is_displayed()  # Current Time
+            logos = self.driver.find_elements(By.XPATH, '//img[@class="_3AvKKglsX_LnweBHh4FHsB"]')  # Channel Logos
+            logo = []  # Store the Logo Channel Numbers
+            for i in range(len(logos)):  # Collect all the Logo Channel Numbers
+                logo.append(logos[i].get_attribute("alt"))
+            last_logo = self.driver.find_element(By.XPATH, '//img[@alt="%s"]' % str(logo[-1]))  # Last Logo
+            first_logo = self.driver.find_element(By.XPATH, '//img[@alt="%s"]' % str(logo[0]))  # First Logo
+            self.driver.execute_script('arguments[0].scrollIntoView(true);', last_logo)  # Scroll to Bottom of Guide
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % str(logo[-1]))))  # Make Sure the Last Channel Logo is visible
+            self.driver.execute_script('arguments[0].scrollIntoView(true);', first_logo)  # Scroll to Top of Guide
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % str(logo[0]))))  # Make Sure the First Channel Logo is visible
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [

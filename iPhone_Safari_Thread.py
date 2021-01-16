@@ -18,7 +18,7 @@ try:
 except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
-version = '1.2.28'
+version = '1.2.31'
 device = 'iPhone 8-14.3'
 
 

@@ -23,7 +23,7 @@ except KeyError:
     raise
 plat = platform.platform().split('-')
 device = str(plat[0] + "-" + plat[1])
-version = '1.2.28'
+version = '1.2.31'
 
 
 class ChannelCount(object):

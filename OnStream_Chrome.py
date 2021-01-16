@@ -18,7 +18,7 @@ from influxdb import InfluxDBClient
 from Chrome_Thread import version, mc, ChannelCount, device, GetService
 from selenium.webdriver.chrome.service import Service
 
-testrun = '1.2.1'
+testrun = '2.0.0'
 
 try:
     base_path = os.environ['ONSTREAM_HOME']
@@ -157,6 +157,7 @@ def current_time(request):
     t1 = datetime.now() + timedelta(hours=1)
     t2 = datetime.now() + timedelta(hours=2)
     t3 = datetime.now() + timedelta(hours=3)
+    t4 = datetime.now() + timedelta(hours=4)
 
     if datetime.now().strftime('%M') < str(30):
         m = str("{0:0>2}".format(0))
@@ -166,10 +167,12 @@ def current_time(request):
     now1 = t1.strftime('%-I:' + m)
     now2 = t2.strftime('%-I:' + m)
     now3 = t3.strftime('%-I:' + m)
+    now4 = t4.strftime('%-I:' + m)
     request.cls.now = now
     request.cls.now1 = now1
     request.cls.now2 = now2
     request.cls.now3 = now3
+    request.cls.now4 = now4
     yield
 
 
@@ -344,23 +347,21 @@ class TestVersion:
 class TestHomeScreen:
     def test_images_displayed(self):
         try:
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]')))
-            self.driver.find_element(By.XPATH, '//div[@class="_1oUh3apnwdwzBiB_Uw6seb "]').is_displayed()  # banner
-            self.driver.find_element(By.XPATH, '//img[@alt="Dish Logo"]').is_displayed()  # dish
-            self.driver.find_element(By.XPATH, '//img[@alt="Dish Logo"]').is_displayed()  # dish fiber
-            self.driver.find_element(By.XPATH, '//img[@alt="' + self.logo + '"]').is_displayed()  # custom_logo
-            self.driver.find_element(By.XPATH, '//div[@class="Wjmljsl8wM6YcCXO7StJi"]').is_displayed()  # line
-            self.driver.find_element(By.XPATH, '//div[@class="_3h0DRYR6lHf63mKPlX9zwF"]').is_displayed()  # background
-            self.driver.find_element(By.XPATH,
-                                     '//span[@class="_3BUdesL_Hri_ikvd5WhZhY _3A8PSs77Wrg10ciWiA2H_B  "]').is_displayed()  # underline
-            self.driver.find_element(By.XPATH, '//div[@class="_2DNEUdY-mRumdYpM8xTEN5"]').is_displayed()  # bottom_image
-            self.driver.find_element(By.XPATH, '//a[@class="_2r6Lq2AYJyfbZABtJvL0D_"]').is_displayed()  # setting
-            self.driver.find_element(By.XPATH, '//hr[@class="K22SRFwz7Os1KInw2zPCQ"]').is_displayed()  # thin_line
-            live = self.driver.find_elements(By.XPATH,
-                                             '//div[@class="_1acuZqkpaJBNYrvoPzBNq_ _1Ec0IteN1F_Ae9opzh37wr"]')
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]')))  # Wait for page to load
+            self.driver.find_element(By.XPATH, '//div[@class="_1oUh3apnwdwzBiB_Uw6seb "]').is_displayed()  # Black Header Banner
+            self.driver.find_element(By.XPATH, '//img[@alt="Dish Logo"]').is_displayed()  # Dish Logo Upper Left
+            self.driver.find_element(By.XPATH, '//div[@class="Wjmljsl8wM6YcCXO7StJi"]').is_displayed()  # Thin Line between Logos
+            self.driver.find_element(By.XPATH, '//div[@class="_3h0DRYR6lHf63mKPlX9zwF"]').is_displayed()  # Page Background
+            self.driver.find_element(By.XPATH, '//span[@class="_3BUdesL_Hri_ikvd5WhZhY _3A8PSs77Wrg10ciWiA2H_B  "]').is_displayed()  # underline
+            self.driver.find_element(By.XPATH, '//div[@class="_2DNEUdY-mRumdYpM8xTEN5"]').is_displayed()  # Bottom Image
+            self.driver.find_element(By.XPATH, '//a[@class="_2r6Lq2AYJyfbZABtJvL0D_"]').is_displayed()  # Settings Cog
+            self.driver.find_element(By.XPATH, '//hr[@class="K22SRFwz7Os1KInw2zPCQ"]').is_displayed()  # Thin Line Bellow Full TV Guide Button
+            live = self.driver.find_elements(By.XPATH, '//div[@class="_1acuZqkpaJBNYrvoPzBNq_ _1Ec0IteN1F_Ae9opzh37wr"]')  # Popular Channels
+            custom = self.driver.find_elements(By.XPATH, '//img[@alt="' + self.logo + '"]')  # Custom Property Logo Upper Left and Centered
             for image in live:
                 image.is_displayed()  # popular_channels
+            for logo in custom:
+                logo.is_displayed()  # Custom Property Logo Upper Left and Centered
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
@@ -515,22 +516,17 @@ class TestHomeScreen:
 
     def test_buttons_displayed(self):
         try:
-            self.driver.find_element(By.XPATH, '//a[contains(@href,"home")]').is_displayed()  # home
-            self.driver.find_element(By.XPATH, '//a[contains(@href,"epg")]').is_displayed()  # guide
-            self.driver.find_element(By.XPATH, '//a[@class="_2r6Lq2AYJyfbZABtJvL0D_"]').is_displayed()  # setting
-            self.driver.find_element(By.XPATH,
-                                     '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]').is_displayed()  # full guide
-            self.driver.find_elements(By.XPATH, '//div[@class="_1iKpTFW64nBCEODaArwlyd _1encUiSOWTmH2vOVl5BZqy"]')
-            self.driver.find_element(By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 null"]').is_displayed()
-            # learn_more
-            drop_down = self.driver.find_elements(By.XPATH,
-                                                  '//a[@class="_1jBpd9Hw7kDuuvGVNTNlax schema_accent_background_hover"]')
-            live = self.driver.find_elements(By.XPATH,
-                                             '//div[@class="_1iKpTFW64nBCEODaArwlyd _1encUiSOWTmH2vOVl5BZqy"]')
+            self.driver.find_element(By.XPATH, '//a[contains(@href,"home")]').is_displayed()  # Home Button
+            self.driver.find_element(By.XPATH, '//a[contains(@href,"epg")]').is_displayed()  # Guide Button
+            self.driver.find_element(By.XPATH, '//a[@class="_2r6Lq2AYJyfbZABtJvL0D_"]').is_displayed()  # Setting Cog Button
+            self.driver.find_element(By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]').is_displayed()  # View Full TV Guide Button
+            self.driver.find_element(By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 null"]').is_displayed()  # Learn More Button
+            drop_down = self.driver.find_elements(By.XPATH, '//a[@class="_1jBpd9Hw7kDuuvGVNTNlax schema_accent_background_hover"]')  # Setting Cog Drop Down Buttons
+            live = self.driver.find_elements(By.XPATH, '//div[@class="_1iKpTFW64nBCEODaArwlyd _1encUiSOWTmH2vOVl5BZqy"]')  # Popular Channels Watch Live Button
             for button in live:
-                button.is_displayed()  # popular_channels
+                button.is_displayed()  # Popular Channels Watch Live Button
             for button1 in drop_down:
-                button1.is_displayed()  # drop_down
+                button1.is_displayed()  # Setting Cog Drop Down Buttons
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
@@ -854,17 +850,15 @@ class TestHomeScreen:
 
     def test_text_displayed(self):
         try:
-            self.driver.find_element(By.XPATH, '//span[contains(text(), "Home")]')  # home
-            self.driver.find_element(By.XPATH, '//span[contains(text(), "TV Guide")]')  # guide
-            self.driver.find_element(By.XPATH, '//button[contains(text(), "VIEW FULL TV GUIDE")]')  # full_guide
-            self.driver.find_element(By.XPATH, '//div[contains(text(), "Most Popular Channels")]')  # pop_channels
-            self.driver.find_element(By.XPATH,
-                                     '//div[contains(text(), "Want more channels, a DVR, or additional features?")]')  # question
-            self.driver.find_element(By.XPATH, '//div[contains(text(), "Call 866-794-6166")]')  # number
-            live = self.driver.find_elements(By.XPATH,
-                                             '//div[@class="_1MhUC88bcyh64jOZVIlotn _3DE_w36fN1va108RdAiaue" and text()="WATCH TV"]')
+            self.driver.find_element(By.XPATH, '//span[contains(text(), "Home")]')  # Home
+            self.driver.find_element(By.XPATH, '//span[contains(text(), "TV Guide")]')  # TV Guide
+            self.driver.find_element(By.XPATH, '//button[contains(text(), "VIEW FULL TV GUIDE")]')  # View Full TV Guide
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "Most Popular Channels")]')  # Most Popular Channels
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "Want more channels, a DVR, or additional features?")]')  # Questions
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "Call 866-794-6166")]')  # Phone Number
+            live = self.driver.find_elements(By.XPATH, '//div[@class="_1MhUC88bcyh64jOZVIlotn _3DE_w36fN1va108RdAiaue" and text()="WATCH TV"]')  # Watch TV
             for text in live:
-                text.is_displayed()  # watch_live
+                text.is_displayed()  # Watch TV
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
@@ -1019,8 +1013,9 @@ class TestHomeScreen:
 
     def test_link_clickable(self):
         try:
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 null"]'))).click()  # learn more
+            learn_more = self.driver.find_element(By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 null"]')  # Learn More
+            self.driver.execute_script('arguments[0].scrollIntoView(true);', learn_more)  # Scroll Down to the Bottom
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 null"]'))).click()  # Learn More
             while True:
                 if len(self.driver.window_handles) == 1:  # see if a tab is open
                     print("no tab")
@@ -1194,16 +1189,20 @@ class TestHomeScreen:
 class TestGuideScreen:
     def test_images_displayed(self):
         try:
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="_3s9BHby87YFunQATlfDFIG _13zgmvI0VzaLaUVl9-7siJ"]')))
-            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))
-            self.driver.find_element(By.XPATH, '//div[@class="_1oUh3apnwdwzBiB_Uw6seb "]').is_displayed()  # banner
-            self.driver.find_element(By.XPATH, '//img[@alt="Dish Logo"]').is_displayed()  # dish
-            self.driver.find_element(By.XPATH, '//img[@alt="Dish Logo"]').is_displayed()  # custom_logo
-            self.driver.find_element(By.XPATH, '//div[@class="Wjmljsl8wM6YcCXO7StJi"]').is_displayed()  # line
-            self.driver.find_element(By.XPATH, '//span[@class="_3BUdesL_Hri_ikvd5WhZhY _3A8PSs77Wrg10ciWiA2H_B  "]').is_displayed()  # underline
-            self.driver.find_element(By.XPATH, '//div[@class="_2JbshVQf7cKfzSj6SAqTiq"]').is_displayed()  # channel logos
-            self.driver.find_element(By.XPATH, '//div[@class="_3mtdocLQZjeofa83PD2_vL"]').is_displayed()  # vertical bar
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()  # Click on the Guide Button
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="_3s9BHby87YFunQATlfDFIG _13zgmvI0VzaLaUVl9-7siJ"]')))  # Verify Guide Page Loads
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # Verify Guide Data is loaded
+            self.driver.find_element(By.XPATH, '//div[@class="_1oUh3apnwdwzBiB_Uw6seb "]').is_displayed()  # Black Header Banner
+            self.driver.find_element(By.XPATH, '//img[@alt="Dish Logo"]').is_displayed()  # Dish Logo Upper Left
+            self.driver.find_element(By.XPATH, '//img[@alt="' + self.logo + '"]').is_displayed()  # Custom Property Logo Upper Left
+            self.driver.find_element(By.XPATH, '//div[@class="Wjmljsl8wM6YcCXO7StJi"]').is_displayed()  # Thin Line between Logos
+            self.driver.find_element(By.XPATH, '//span[@class="_3BUdesL_Hri_ikvd5WhZhY _3A8PSs77Wrg10ciWiA2H_B  "]').is_displayed()  # Top White Line
+            self.driver.find_element(By.XPATH, '//div[@class="_2JbshVQf7cKfzSj6SAqTiq"]').is_displayed()  # vertical bar
+            logos = self.driver.find_elements(By.XPATH, '//div[@class="_3s9BHby87YFunQATlfDFIG _13zgmvI0VzaLaUVl9-7siJ"]')  # Channel Logos
+            if len(logos) == len(ChannelCount.all_channels):
+                assert True  # Number of Logos is the same as the number of channels
+            else:
+                assert False
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
@@ -1358,12 +1357,11 @@ class TestGuideScreen:
 
     def test_text_displayed(self):
         try:
-            self.driver.find_element(By.XPATH,
-                                     '//div[@class="_1AhFoq9LRVrQE0BrdpGozJ schema_epgTimelineColors_background"]').is_displayed()  # TODAY
-            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now).is_displayed()  # Time 1
-            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now1).is_displayed()  # Time 2
-            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now2).is_displayed()  # Time 3
-            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now3).is_displayed()  # Time 4
+            self.driver.find_element(By.XPATH, '//div[@class="_1AhFoq9LRVrQE0BrdpGozJ schema_epgTimelineColors_background"]').is_displayed()  # TODAY
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now).is_displayed()  # Current Time
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now1).is_displayed()  # Time 1
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now2).is_displayed()  # Time 2
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now3).is_displayed()  # Time 3
             self.driver.find_element(By.XPATH, '//span[contains(text(), "MORE INFO")]').is_displayed()  # More Info
             self.driver.find_element(By.XPATH, '//span[contains(text(), "WATCH LIVE")]').is_displayed()  # Watch Live
         except NoSuchElementException:
@@ -1520,11 +1518,10 @@ class TestGuideScreen:
 
     def test_buttons_displayed(self):
         try:
-            self.driver.find_element(By.XPATH, '//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_displayed()  # right arrow
-            self.driver.find_element(By.XPATH, '//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]').is_displayed()  # play button
-            self.driver.find_element(By.XPATH, '//div[@class="_12Yya3OL4XVr3adIektRU6"]').is_displayed()
-            # more info button
-            self.driver.find_element(By.XPATH, '//a[contains(@href,"home")]').is_displayed()  # home button
+            self.driver.find_element(By.XPATH, '//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_displayed()  # Right Arrow
+            self.driver.find_element(By.XPATH, '//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]').is_displayed()  # Play Button
+            self.driver.find_element(By.XPATH, '//div[@class="_12Yya3OL4XVr3adIektRU6"]').is_displayed()  # More Info Button
+            self.driver.find_element(By.XPATH, '//a[contains(@href,"home")]').is_displayed()  # Home Button
             self.driver.find_element(By.XPATH, '//a[@class="_2r6Lq2AYJyfbZABtJvL0D_"]').is_displayed()  # Setting Cog
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
@@ -1680,12 +1677,179 @@ class TestGuideScreen:
 
     def test_buttons_clickable(self):
         try:
-            self.driver.find_element(By.XPATH, '//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_enabled()  # right arrow
-            self.driver.find_element(By.XPATH, '//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]').is_enabled()  # play button
-            self.driver.find_element(By.XPATH, '//div[@class="_12Yya3OL4XVr3adIektRU6"]').is_enabled()
-            # more info button
-            self.driver.find_element(By.XPATH, '//a[contains(@href,"home")]').is_enabled()  # home button
+            self.driver.find_element(By.XPATH, '//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_enabled()  # Right Arrow
+            self.driver.find_element(By.XPATH, '//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]').is_enabled()  # Play Button
+            self.driver.find_element(By.XPATH, '//div[@class="_12Yya3OL4XVr3adIektRU6"]').is_enabled()  # More Info Button
+            self.driver.find_element(By.XPATH, '//a[contains(@href,"home")]').is_enabled()  # Home Button
             self.driver.find_element(By.XPATH, '//a[@class="_2r6Lq2AYJyfbZABtJvL0D_"]').is_enabled()  # Setting Cog
+        except NoSuchElementException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            body = [
+                {
+                    "measurement": "OnStream",
+                    "tags": {
+                        "Software": version,
+                        "Test": mc.get_value(),
+                        "Pytest": self.name,
+                        "URL": ChannelCount.dishtv,
+                        "Browser": "Chrome",
+                        "Device": device,
+                    },
+                    "time": time.time_ns(),
+                    "fields": {
+                        "element_not_found": 1,
+                    }
+                }
+            ]
+            client.write_points(body)
+            assert False, "Element was not found"
+        except TimeoutException:
+            self.driver.save_screenshot(self.direct + self.name + ".png")
+            loading_circle = self.driver.find_elements(By.XPATH,
+                                                       '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH,
+                                                     '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
+            loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
+            went_wrong = self.driver.find_elements(By.XPATH,
+                                                   '//h2[contains(text(), "Something went wrong with the stream.")]')
+            if len(loading_circle) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Chrome",
+                            "Device": device,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "loading_circle": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck on loading screen"
+            elif len(no_streaming) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Chrome",
+                            "Device": device,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "unable_to_connect": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "It appears that you are not able to connect to Streaming Services at this time."
+            elif len(error_404) > 0:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Chrome",
+                            "Device": device,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "error_404": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "404 error"
+            elif len(loading_element):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Chrome",
+                            "Device": device,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "element_loading": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Stuck loading an element"
+            elif len(went_wrong):
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Chrome",
+                            "Device": device,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "went_wrong": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "Something went wrong"
+            else:
+                body = [
+                    {
+                        "measurement": "OnStream",
+                        "tags": {
+                            "Software": version,
+                            "Test": mc.get_value(),
+                            "Pytest": self.name,
+                            "URL": ChannelCount.dishtv,
+                            "Browser": "Chrome",
+                            "Device": device,
+                        },
+                        "time": time.time_ns(),
+                        "fields": {
+                            "timeout_exception": 1,
+                        }
+                    }
+                ]
+                client.write_points(body)
+                assert False, "timeout error"
+
+    def test_guide_function(self):
+        try:
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]'))).click()  # Click on the Right Arrow
+            WebDriverWait(self.driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[contains(text(), "%s")]' % self.now)))  # Make Sure the Current Time is not Visible
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now4).is_displayed()  # Time 4
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="_1707eBDJu9YjB5cHLPrnFG"]'))).click()  # Click on the Left Arrow
+            self.driver.find_element(By.XPATH, '//div[contains(text(), "%s")]' % self.now).is_displayed()  # Current Time
+            logos = self.driver.find_elements(By.XPATH, '//img[@class="_3AvKKglsX_LnweBHh4FHsB"]')  # Channel Logos
+            logo = []  # Store the Logo Channel Numbers
+            for i in range(len(logos)):  # Collect all the Logo Channel Numbers
+                logo.append(logos[i].get_attribute("alt"))
+            last_logo = self.driver.find_element(By.XPATH, '//img[@alt="%s"]' % str(logo[-1]))  # Last Logo
+            first_logo = self.driver.find_element(By.XPATH, '//img[@alt="%s"]' % str(logo[0]))  # First Logo
+            self.driver.execute_script('arguments[0].scrollIntoView(true);', last_logo)  # Scroll to Bottom of Guide
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % str(logo[-1]))))  # Make Sure the Last Channel Logo is visible
+            self.driver.execute_script('arguments[0].scrollIntoView(true);', first_logo)  # Scroll to Top of Guide
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % str(logo[0]))))  # Make Sure the First Channel Logo is visible
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
@@ -2358,17 +2522,13 @@ class TestSideBarScreen:
 
     def test_buttons_clickable(self):
         try:
-            self.driver.find_element(By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]').is_enabled()
-            # exit button
-            self.driver.find_element(By.XPATH, '//div[@class="_12Yya3OL4XVr3adIektRU6"]').is_enabled()
-            # more info button
+            self.driver.find_element(By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]').is_enabled()  # exit button
+            self.driver.find_element(By.XPATH, '//div[@class="_12Yya3OL4XVr3adIektRU6"]').is_enabled()  # more info button
             self.driver.find_element(By.XPATH, '//a[contains(@href,"home")]').is_enabled()  # home button
             self.driver.find_element(By.XPATH, '//a[@class="_2r6Lq2AYJyfbZABtJvL0D_"]').is_enabled()  # Setting Cog
             self.driver.find_element(By.XPATH, '//span[contains(text(), "WATCH LIVE")]').is_enabled()  # Watch Live
             self.driver.find_element(By.XPATH, '//span[contains(text(), "WATCH LIVE")]').click()  # Watch Live
-            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located(
-                (By.XPATH,
-                 '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
+            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
@@ -2526,16 +2686,15 @@ class TestSideBarScreen:
 class TestLiveTV:
     def test_images_displayed(self):
         try:
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
-            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # wait for the guide to populate
-            channel = self.driver.find_elements(By.XPATH, '//div[@class="kRqPgjOjFTl1XZ21adOmo"]')  # click on first channel
-            for i in range(100):
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()  # Go into the Guide
+            WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # Wait For the Guide to Populate
+            channel = self.driver.find_elements(By.XPATH, '//div[@class="kRqPgjOjFTl1XZ21adOmo"]')  # Get a List of all the Current Programs
+            for i in range(100):  # Go through that list of Programs and Select the Play button for them
                 try:
                     channel[i].click()
                     if WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//img[@alt="%s"]' % GetService.call_letters))):  # wait for first channel image to appear
-                        break
-                    else:
+                        break  # Break the Loop if the Program selected is the correct one
+                    else:  # If the Program was not the correct one, continue the for loop
                         WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//span[contains(text(), "FULL TV GUIDE")]'))).click()  # click back button
                         WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.first_channel)))  # wait for the guide to populate
                         pass
@@ -2558,23 +2717,16 @@ class TestLiveTV:
                     pass
                 except ElementNotInteractableException:
                     pass
-            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
-            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@id="bmpui-id-32"]')))
-            # wait for loading screen to disappear
-            self.driver.find_element(By.XPATH, '//span[@class="bmpui-ui-label bmpui-miniEpgToggleLabel"]').click()
-            # click on the mini guide
+            WebDriverWait(self.driver, 30).until_not(ec.presence_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))  # Wait for the loading screen to disappear
+            WebDriverWait(self.driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@id="bmpui-id-32"]')))  # Wait for the LiveTV to Start
+            self.driver.find_element(By.XPATH, '//span[@class="bmpui-ui-label bmpui-miniEpgToggleLabel"]').click()  # click on the mini guide
             self.driver.find_element(By.XPATH, '//div[@class="bmpui-container-wrapper"]').is_displayed()  # Channel logo top right
             self.driver.find_element(By.XPATH, '//img[@alt="17612"]').is_displayed()  # Channel logo in mini guide
-            self.driver.find_element(By.XPATH, '//div[@class="bmpui-ui-container bmpui-divider"]').is_displayed()
-            # divider
-            self.driver.find_element(By.XPATH, '//div[@class="bmpui-ui-container bmpui-fullTvGuideIcon"]').is_displayed()
-            # Left Arrow
-            self.driver.find_element(By.XPATH, '//span[@class="bmpui-ui-label bmpui-miniEpgToggleLabel"]').is_displayed()
-            # Down Arrow
-            self.driver.find_element(By.XPATH, '//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_displayed()
-            # Right Arrow
-            self.driver.find_element(By.XPATH, '//div[@class="bmpui-ui-container bmpui-moreInfoIcon"]').is_displayed()
-            # info emblem
+            self.driver.find_element(By.XPATH, '//div[@class="bmpui-ui-container bmpui-divider"]').is_displayed()  # divider
+            self.driver.find_element(By.XPATH, '//div[@class="bmpui-ui-container bmpui-fullTvGuideIcon"]').is_displayed()  # Left Arrow
+            self.driver.find_element(By.XPATH, '//span[@class="bmpui-ui-label bmpui-miniEpgToggleLabel"]').is_displayed()  # Down Arrow
+            self.driver.find_element(By.XPATH, '//div[@class="_33q8pPVDOZ2wsVJzvR3jdy"]').is_displayed()  # Right Arrow
+            self.driver.find_element(By.XPATH, '//div[@class="bmpui-ui-container bmpui-moreInfoIcon"]').is_displayed()  # info emblem
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
@@ -3452,13 +3604,10 @@ class TestLiveTV:
 class TestSupportSettingsScreen:
     def test_images_displayed(self):
         try:
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
             self.driver.find_element(By.XPATH, '//a[@role="button"]').click()
-            self.driver.find_element(By.XPATH,
-                                     '//a[@class="_1jBpd9Hw7kDuuvGVNTNlax schema_accent_background_hover"]').click()
-            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located(
-                (By.XPATH, '//div[@class="_1sd7usVW7fcyKBYM7qUANM"]')))
+            self.driver.find_element(By.XPATH, '//a[@class="_1jBpd9Hw7kDuuvGVNTNlax schema_accent_background_hover"]').click()
+            WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.XPATH, '//div[@class="_1sd7usVW7fcyKBYM7qUANM"]')))
             self.driver.find_element(By.XPATH, '//div[@class="_1sd7usVW7fcyKBYM7qUANM"]').is_displayed()
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")

@@ -7,8 +7,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
-from webdriver_manager.firefox import GeckoDriverManager
-from selenium.webdriver.firefox.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 
 try:
     base_path = os.environ['ONSTREAM_HOME']
@@ -21,13 +21,17 @@ except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
 plat = platform.platform().split('-')
-device = str(plat[0] + "-" + plat[1])
+device = str(plat[0])
+device_software = str(plat[1])
 version = '1.2.28'
 
 
 class ChannelCount(object):
-    service = Service(GeckoDriverManager().install())
-    driver = webdriver.Firefox(service=service)
+    emulation = {"deviceName": "iPhone 6/7/8"}
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_experimental_option("mobileEmulation", emulation)
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     dishtv = "https://test.watchdishtv.com/"
     driver.get(dishtv)
     WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
@@ -48,26 +52,17 @@ class GetService(object):
     s = tables[1]
     s = s.drop(s.index[0])
     service = s.iloc[:, 0:2]
-    service.to_csv(r'/Users/dishbusiness/Desktop/OnStreamTestFiles/Logs/dish_channel_list.csv',
-                   header=["Service_Number", "Call_Letters"], index=False)
+    service.to_csv(r'/Users/dishbusiness/Desktop/OnStreamTestFiles/Logs/dish_channel_list.csv', header=["Service_Number", "Call_Letters"], index=False)
     service_number = float(ChannelCount.first_channel)
     df = pd.read_csv(r'/Users/dishbusiness/Desktop/OnStreamTestFiles/Logs/dish_channel_list.csv')
     try:
         call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
         call_letters = str(call_letters)
     except IndexError:
-        for i in range(len(ChannelCount.channels)):
-            next_channel = ChannelCount.all_channels[i].split('/')[5]
-            service_number = float(next_channel)
-            try:
-                if df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]:
-                    call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
-                    call_letters = str(call_letters)
-                    break
-                else:
-                    pass
-            except IndexError:
-                pass
+        second_channel = ChannelCount.all_channels[1].split('/')[5]
+        service_number = float(second_channel)
+        call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
+        call_letters = str(call_letters)
 
 
 class CountRun:
@@ -93,7 +88,7 @@ class CountRun:
 
 class ChannelChange:
     def __init__(self):
-        self.change = 1000
+        self.change = 40
 
     def get_number(self):
         return self.change
@@ -108,7 +103,7 @@ def pytest_run():
     while int(len(channels)) < int(cc.get_number()):
         mc.increment()
         mc.save_value()
-        subprocess.run(['pytest', '--pytest-influxdb', '--influxdb_project=FireFox', '--influxdb_run_id=' + str(mc.get_value()), os.path.join(test_path, 'OnStream_Firefox.py'), '-sv'])
+        subprocess.run(['pytest', '--pytest-influxdb', '--influxdb_project=Chrome', '--influxdb_run_id=' + str(mc.get_value()), os.path.join(test_path, 'OnStream_iPhone_Chrome.py'), '-sv'])
         channels = ChannelCount.all_channels + channels
 
 

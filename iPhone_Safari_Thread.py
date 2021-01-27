@@ -18,7 +18,7 @@ try:
 except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
-version = '1.2.31'
+version = '1.2.32'
 device = 'iPhone 8-14.3'
 
 
@@ -42,11 +42,11 @@ class ChannelCount(object):
     driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
     dishtv = "https://test.watchdishtv.com/"
     driver.get(dishtv)
-    WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_1ATKIs2nHrPvAu0b3sAXQz"]'))).click()
-    WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//span[contains(text(), "TV Guide")]'))).click()
-    WebDriverWait(driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="9491"]')))
+    WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[1]/span/button/div'))).click()  # Click on the Hamburger
+    WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[1]/div[2]/span/span[2]/a/span'))).click()  # Click on the TV Guide button
+    WebDriverWait(driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div[1]/div[1]')))  # Wait for Today to populate
     links = []
-    channels = driver.find_elements(By.XPATH, '(//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"])')
+    channels = driver.find_elements(By.XPATH, '(//a[@class="_2eB_OXy4vbP1Kd9moNzO4j"])')  # Collect all of the channels
     for i in range(len(channels)):
         links.append(channels[i].get_attribute("href"))
     all_channels = list(dict.fromkeys(links))
@@ -67,10 +67,18 @@ class GetService(object):
         call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
         call_letters = str(call_letters)
     except IndexError:
-        second_channel = ChannelCount.all_channels[1].split('/')[5]
-        service_number = float(second_channel)
-        call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
-        call_letters = str(call_letters)
+        for i in range(len(ChannelCount.channels)):
+            next_channel = ChannelCount.all_channels[i].split('/')[5]
+            service_number = float(next_channel)
+            try:
+                if df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]:
+                    call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
+                    call_letters = str(call_letters)
+                    break
+                else:
+                    pass
+            except IndexError:
+                pass
 
 
 class CountRun:

@@ -58,10 +58,18 @@ class GetService(object):
         call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
         call_letters = str(call_letters)
     except IndexError:
-        second_channel = ChannelCount.all_channels[1].split('/')[5]
-        service_number = float(second_channel)
-        call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
-        call_letters = str(call_letters)
+        for i in range(len(ChannelCount.channels)):
+            next_channel = ChannelCount.all_channels[i].split('/')[5]
+            service_number = float(next_channel)
+            try:
+                if df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]:
+                    call_letters = df.loc[df["Service_Number"] == service_number, 'Call_Letters'].values[0]
+                    call_letters = str(call_letters)
+                    break
+                else:
+                    pass
+            except IndexError:
+                pass
 
 
 class CountRun:

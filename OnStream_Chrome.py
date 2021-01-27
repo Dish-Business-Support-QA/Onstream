@@ -1673,7 +1673,7 @@ class TestGuideScreen:
             self.driver.find_element(By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div[2]/div[1]/div/div[1]/button/div[2]').is_enabled()  # Right Arrow
             self.driver.find_element(By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div[2]/div[1]/div/div[2]/div/div/div[1]/div/div[1]/div/div/div[1]/div/div/div/div[2]/a').is_enabled()  # Play Button
             self.driver.find_element(By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div[2]/div[1]/div/div[2]/div/div/div[1]/div/div[1]/div/div/div[1]/div/div/div/div[1]/div[2]').is_enabled()  # More Info Button
-            self.driver.find_element(By.XPATH, '//a[contains(@href,"home")]').is_enabled() # Home Button
+            self.driver.find_element(By.XPATH, '//a[contains(@href,"home")]').is_enabled()  # Home Button
             self.driver.find_element(By.XPATH, '//a[@class="m6EdrAqXz3o1yv-vdZ1ZV"]').is_enabled()  # Setting Cog Button
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")

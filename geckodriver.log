@@ -26902,3 +26902,13 @@ console.warn: SearchSettings: "get: No settings file exists, new profile?" (new 
 1607442255451	Marionette	INFO	Listening on port 63770
 1607442255494	Marionette	WARN	TLS certificate errors will be ignored for this session
 1607442261113	Marionette	INFO	Stopped listening on port 63770
+1610477606227	geckodriver	INFO	Listening on 127.0.0.1:57195
+1610477606762	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/4_/_dcrxz611mv09n6nd404kj_80000gq/T/rust_mozprofilebNVTH5"
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1610477612734	Marionette	INFO	Listening on port 57204
+1610477612803	Marionette	WARN	TLS certificate errors will be ignored for this session
+1610477613361	Marionette	WARN	Ignoring event 'DOMContentLoaded' because document has an invalid readyState of 'complete'.
+1610481009799	Marionette	INFO	Stopped listening on port 57204
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+

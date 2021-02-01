@@ -13,7 +13,7 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime, timedelta
 from influxdb import InfluxDBClient
-from Edge_Thread import version, mc, ChannelCount, device, GetService
+from Edge_Thread import version, mc, ChannelCount, device, active_service, all_ld
 from msedge.selenium_tools import EdgeOptions
 from selenium.webdriver.edge.service import Service
 
@@ -1190,10 +1190,18 @@ class TestGuideScreen:
             self.driver.find_element(By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[2]/div/div[1]').is_displayed()  # Top White Line
             self.driver.find_element(By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div[2]/div[3]/div').is_displayed()  # vertical bar
             logos = self.driver.find_elements(By.XPATH, '//img[@class="_2taHIt9ptBC9h3nyExFgez"]')  # Channel Logos
-            if len(logos) == len(ChannelCount.all_channels):
+            if len(logos) == len(active_service):
                 assert True  # Number of Logos is the same as the number of channels
             else:
                 assert False
+            for gu in ChannelCount.all_guide_uid:  # A for loop which compares the list of JSON data with the list of Guide Data in OnStream
+                for logo in all_ld:
+                    if str(logo['suid']) in str(gu):
+                        assert True
+            for a in active_service:  # A for loop which compares the list of JSON data with the list of Guide Data in OnStream (CallLetters)
+                for logo in all_ld:
+                    if str(logo['callsign']) in str(a):
+                        assert True
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
@@ -2003,7 +2011,7 @@ class TestSideBarScreen:
             for i in range(100):
                 try:
                     channel[i].click()
-                    if WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % GetService.call_letters))):  # wait for first channel image to appear
+                    if WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.call_letters))):  # wait for first channel image to appear
                         break
                     else:
                         WebDriverWait(self.driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//button[@class="_1Xyb-h8ETwWmEllf3HIy58"]'))).click()  # click back button
@@ -2034,12 +2042,20 @@ class TestSideBarScreen:
             self.driver.find_element(By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[2]/div/div[1]').is_displayed()  # Top White Line
             self.driver.find_element(By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div[2]/div[3]/div').is_displayed()  # vertical bar
             logos = self.driver.find_elements(By.XPATH, '//img[@class="_2taHIt9ptBC9h3nyExFgez"]')  # Channel Logos
-            if len(logos) == len(ChannelCount.all_channels):
+            if len(logos) == len(active_service):
                 assert True  # Number of Logos is the same as the number of channels
             else:
                 assert False
+            for gu in ChannelCount.all_guide_uid:  # A for loop which compares the list of JSON data with the list of Guide Data in OnStream
+                for logo in all_ld:
+                    if str(logo['suid']) in str(gu):
+                        assert True
+            for a in active_service:  # A for loop which compares the list of JSON data with the list of Guide Data in OnStream (CallLetters)
+                for logo in all_ld:
+                    if str(logo['callsign']) in str(a):
+                        assert True
             side_channel_logo = self.driver.find_element(By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[2]/div/div[2]/div/div[1]/div[1]/div/img')  # channel logo in side bar
-            assert side_channel_logo.get_attribute("alt") == GetService.call_letters
+            assert side_channel_logo.get_attribute("alt") == ChannelCount.call_letters
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [
@@ -2687,7 +2703,7 @@ class TestLiveTV:
             for i in range(100):  # Go through that list of Programs and Select the Play button for them
                 try:
                     channel[i].click()
-                    if WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//img[@alt="%s"]' % GetService.call_letters))):  # wait for first channel image to appear
+                    if WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//img[@alt="%s"]' % ChannelCount.call_letters))):  # wait for first channel image to appear
                         break  # Break the Loop if the Program selected is the correct one
                     else:  # If the Program was not the correct one, continue the for loop
                         WebDriverWait(self.driver, 10).until(ec.presence_of_element_located((By.XPATH, '//span[contains(text(), "FULL TV GUIDE")]'))).click()  # click back button

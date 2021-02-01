@@ -2897,10 +2897,6 @@ class TestLiveTV:
             self.driver.find_element(By.XPATH, '//span[@class="bmpui-ui-label bmpui-title"]').is_displayed()  # Show title
             self.driver.find_element(By.XPATH, '//span[@class="bmpui-ui-label bmpui-subTitle"]').is_displayed()  # Show episode
             self.driver.find_element(By.XPATH, '//span[text()="FULL TV GUIDE"]').is_displayed()  # Full TV Guide
-            """self.driver.find_element(By.XPATH, '//span[@class="bmpui-ui-playbacktimelabel"]').is_displayed()
-            # Run Time of Service
-            self.driver.find_element(By.XPATH, '//span[@class="bmpui-ui-playbacktimelabel bmpui-text-right"]').is_displayed()"""
-            # Time left of Service
         except NoSuchElementException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
             body = [

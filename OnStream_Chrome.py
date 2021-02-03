@@ -17,6 +17,7 @@ from datetime import datetime, timedelta
 from influxdb import InfluxDBClient
 from Chrome_Thread import version, mc, ChannelCount, device, active_service, all_ld
 from selenium.webdriver.chrome.service import Service
+from argument_onstream import args
 
 testrun = '2.0.0'
 
@@ -26,22 +27,12 @@ except KeyError:
     print('Could not get environment variable "base_path". This is needed for the tests!"')
     raise
 try:
-    test_path = os.environ['ONSTREAM_TEST']
-except KeyError:
-    print('Could not get environment variable "test_path". This is needed for the tests!"')
-    raise
-try:
     picture_path = os.environ['ONSTREAM_PICTURES']
 except KeyError:
     print('Could not get environment variable "test_path". This is needed for the tests!"')
     raise
-try:
-    grafana = os.environ['GRAFANA']
-except KeyError:
-    print('Could not get environment variable "grafana". This is needed for the tests!"')
-    raise
 
-client = InfluxDBClient(host=grafana, port=8086, database='ONSTREAM')
+client = InfluxDBClient(host=args.grafana_ip, port=args.grafana_port, database='ONSTREAM')
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -4415,14 +4406,11 @@ class TestLegalSettingsScreen:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH,
-                                                       '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH,
-                                                     '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
-            went_wrong = self.driver.find_elements(By.XPATH,
-                                                   '//h2[contains(text(), "Something went wrong with the stream.")]')
+            went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {

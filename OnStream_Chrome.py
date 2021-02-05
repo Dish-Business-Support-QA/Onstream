@@ -1,6 +1,5 @@
 import os
 import pytest
-import json
 import time
 import subprocess
 import shutil
@@ -11,32 +10,42 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime, timedelta
 from influxdb import InfluxDBClient
-from Chrome_Thread import version, mc, ChannelCount, device, active_service, all_ld
+from Chrome_Thread import version, mc, ChannelCount, device, active_service, all_ld, browser
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from argument_onstream import args
-
-testrun = '2.0.0'
-
-try:
-    base_path = os.environ['ONSTREAM_HOME']
-except KeyError:
-    print('Could not get environment variable "base_path". This is needed for the tests!"')
-    raise
-try:
-    picture_path = os.environ['ONSTREAM_PICTURES']
-except KeyError:
-    print('Could not get environment variable "test_path". This is needed for the tests!"')
-    raise
 
 client = InfluxDBClient(host=args.grafana_ip, port=args.grafana_port, database='ONSTREAM')
 
 
 @pytest.fixture(scope="session", autouse=True)
 def auto_start(request):
+    try:
+        archive_version = os.path.abspath(os.curdir) + os.sep + 'Archived' + os.sep + args.onstream_version
+        os.mkdir(archive_version)
+    except FileNotFoundError:
+        trd = os.path.abspath(os.curdir) + os.sep + 'Archived'
+        os.mkdir(trd)
+    except FileExistsError:
+        pass
+
+    count = 0
+    for i in os.listdir(os.path.abspath(os.curdir) + os.sep + 'Archived' + os.sep + args.onstream_version):
+        if not i.startswith('.'):
+            count += 1
+
+    testrun = count + 1
+    try:
+        archive = os.path.abspath(os.curdir) + os.sep + 'Archived' + os.sep + args.onstream_version + os.sep + str(browser) + '_' + str(testrun)
+        os.mkdir(archive)
+    except FileNotFoundError:
+        at = os.path.abspath(os.curdir) + os.sep + 'Archived' + os.sep + args.onstream_version
+        os.mkdir(at)
+    except FileExistsError:
+        pass
     test_start = [
         {
             "measurement": "OnStream",
@@ -77,20 +86,11 @@ def auto_start(request):
             }
         ]
         client.write_points(test_end)
-        try:
-            Archived = os.path.join(base_path) + '/' + 'Archived' + '/' + testrun + '/' + mc.get_value()
-            os.mkdir(Archived)
-        except FileNotFoundError:
-            tr = os.path.join(base_path) + '/' + 'Archived' + '/' + testrun
-            os.mkdir(tr)
-        except FileExistsError:
-            Archived = os.path.join(base_path) + '/' + 'Archived' + '/' + testrun + '/' + mc.get_value() + 'duplicate'
-            os.mkdir(Archived)
 
-        Pictures = os.path.join(base_path) + '/' + 'Pictures' + '/'
-        Duration = os.path.join(base_path) + '/' + 'Duration' + '/'
+        Pictures = os.path.abspath(os.curdir) + os.sep + 'Pictures' + os.sep
+        Duration = os.path.abspath(os.curdir) + os.sep + 'Pictures' + os.sep
 
-        dest = os.path.join(base_path, 'Archived') + '/' + testrun + '/' + mc.get_value()
+        dest = os.path.abspath(os.curdir) + os.sep + 'Archived' + os.sep + args.onstream_version + os.sep + str(browser) + '_' + str(testrun)
 
         try:
             PicturesFile = os.listdir(Pictures)
@@ -117,8 +117,7 @@ def auto_start(request):
 @pytest.fixture(scope="class")
 def directory(request):
     name = os.environ.get('PYTEST_CURRENT_TEST')
-    """.split(':')[-1].split(' ')[0]"""
-    direct = os.path.join(picture_path) + "/"
+    direct = os.path.abspath(os.curdir) + os.sep + 'Pictures' + os.sep
     request.cls.direct = direct
     request.cls.name = name
     yield
@@ -126,14 +125,17 @@ def directory(request):
 
 @pytest.fixture(scope="class")
 def setup(request):
-    caps = DesiredCapabilities.CHROME
-    caps['goog:loggingPrefs'] = {'performance': 'ALL'}
+    options = Options()
+    options.add_argument('--no-sandbox')
+    options.add_argument('--start-maximized')
+    options.add_argument('--disable-extensions')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--ignore-certificate-errors')
     service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, desired_capabilities=caps)
+    driver = webdriver.Chrome(service=service, options=options)
     dishtv = ChannelCount.dishtv
     driver.get(dishtv)
-    driver.maximize_window()
-    logo = "DaVita Logo"  # Big logo on home screen
+    logo = args.custom_logo  # Big logo on home screen
     src = driver.page_source
     request.cls.driver = driver
     request.cls.src = src
@@ -4583,14 +4585,11 @@ class TestServices:
             assert False, "Element was not found"
         except TimeoutException:
             self.driver.save_screenshot(self.direct + self.name + ".png")
-            loading_circle = self.driver.find_elements(By.XPATH,
-                                                       '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
-            no_streaming = self.driver.find_elements(By.XPATH,
-                                                     '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
+            loading_circle = self.driver.find_elements(By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')
+            no_streaming = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "It appears that you are not able to connect to Streaming Services at this time.")]')
             error_404 = self.driver.find_elements(By.XPATH, '//h1[contains(text(), "Oops! Error 404")]')
             loading_element = self.driver.find_elements(By.XPATH, '//span[contains(text(), "Loading...")]')
-            went_wrong = self.driver.find_elements(By.XPATH,
-                                                   '//h2[contains(text(), "Something went wrong with the stream.")]')
+            went_wrong = self.driver.find_elements(By.XPATH, '//h2[contains(text(), "Something went wrong with the stream.")]')
             if len(loading_circle) > 0:
                 body = [
                     {
@@ -4711,11 +4710,3 @@ class TestServices:
                 ]
                 client.write_points(body)
                 assert False, "timeout error"
-
-
-@pytest.mark.usefixtures("setup")
-class TestLog:
-    def test_log(self):
-        with open('/Users/dishbusiness/Desktop/OnStreamTestFiles/Duration/Time_Log.json', 'a+') as t:
-            for entry in self.driver.get_log('performance'):
-                json.dump(entry, t, ensure_ascii=False, indent=4)

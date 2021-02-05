@@ -11,16 +11,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from argument_onstream import args
 
-try:
-    base_path = os.environ['ONSTREAM_HOME']
-except KeyError:
-    print('Could not get environment variable "base_path". This is needed for the tests!"')
-    raise
+browser = os.path.basename(__file__).split("_")[0]
 plat = platform.platform().split('-')
 device = str(plat[0] + "-" + plat[1])
 version = args.onstream_version
@@ -72,10 +67,14 @@ class SmartboxData(object):
 
 
 class ChannelCount:
-    caps = DesiredCapabilities.CHROME
-    caps['goog:loggingPrefs'] = {'performance': 'ALL'}
+    options = Options()
+    options.add_argument('--no-sandbox')
+    options.add_argument('--start-maximized')
+    options.add_argument('--disable-extensions')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--ignore-certificate-errors')
     service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, desired_capabilities=caps)
+    driver = webdriver.Chrome(service=service, options=options)
     dishtv = args.onstream_url
     driver.get(dishtv)
     WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[1]/div[2]/span/span[2]/a/span'))).click()  # Click on the TV Guide Button
@@ -134,12 +133,12 @@ class CountRun:
         self.counter = 0
 
     def get_value(self):
-        with open(os.path.join(base_path, 'test_run_num.txt'), 'r') as rt:
+        with open(os.path.abspath(os.curdir + os.sep + 'test_run_num.txt'), 'r') as rt:
             self.line = str(rt.read())
         return self.line
 
     def save_value(self):
-        with open(os.path.join(base_path, 'test_run_num.txt'), 'w+') as tr:
+        with open(os.path.abspath(os.curdir + os.sep + 'test_run_num.txt'), 'w+') as tr:
             tr.write(str(self.counter))
 
 

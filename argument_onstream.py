@@ -7,5 +7,6 @@ parser.add_argument("--onstream_version", dest="onstream_version", action="store
 parser.add_argument("--channel_loop", dest="channel_loop", action="store", default="40", help="The number of channels you wish to flip through in OnStream")
 parser.add_argument("--grafana_ip", dest="grafana_ip", action="store", default="localhost", help="The IP of the Grafana instance")
 parser.add_argument("--grafana_port", dest="grafana_port", action="store", default="8086", help="The IP of the Grafana instance")
+parser.add_argument("--custom_logo", dest="custom_logo", action="store", default="DaVita Logo", help="The Custom Logo which appears in the middle of the main page for OnStream")
 
 args, unknown = parser.parse_known_args()

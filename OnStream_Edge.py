@@ -13,46 +13,48 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime, timedelta
 from influxdb import InfluxDBClient
-from Edge_Thread import version, mc, ChannelCount, device, active_service, all_ld
+from Edge_Thread import version, mc, ChannelCount, device, active_service, all_ld, browser
 from msedge.selenium_tools import EdgeOptions
 from selenium.webdriver.edge.service import Service
+from argument_onstream import args
 
-testrun = '2.0.1'
-
-try:
-    base_path = os.environ['ONSTREAM_HOME']
-except KeyError:
-    print('Could not get environment variable "base_path". This is needed for the tests!"')
-    raise
-try:
-    test_path = os.environ['ONSTREAM_TEST']
-except KeyError:
-    print('Could not get environment variable "test_path". This is needed for the tests!"')
-    raise
-try:
-    picture_path = os.environ['ONSTREAM_PICTURES']
-except KeyError:
-    print('Could not get environment variable "test_path". This is needed for the tests!"')
-    raise
-try:
-    grafana = os.environ['GRAFANA']
-except KeyError:
-    print('Could not get environment variable "grafana". This is needed for the tests!"')
-    raise
-
-client = InfluxDBClient(host=grafana, port=8086, database='ONSTREAM')
+client = InfluxDBClient(host=args.grafana_ip, port=args.grafana_port, database='ONSTREAM')
 
 
 @pytest.fixture(scope="session", autouse=True)
 def auto_start(request):
+    try:
+        archive_version = os.path.abspath(os.curdir) + os.sep + 'Archived' + os.sep + args.onstream_version
+        os.mkdir(archive_version)
+    except FileNotFoundError:
+        trd = os.path.abspath(os.curdir) + os.sep + 'Archived'
+        os.mkdir(trd)
+    except FileExistsError:
+        pass
+
+    count = 0
+    for i in os.listdir(os.path.abspath(os.curdir) + os.sep + 'Archived' + os.sep + args.onstream_version):
+        if not i.startswith('.'):
+            count += 1
+
+    testrun = count + 1
+    try:
+        archive = os.path.abspath(os.curdir) + os.sep + 'Archived' + os.sep + args.onstream_version + os.sep + str(browser) + '_' + str(testrun)
+        os.mkdir(archive)
+    except FileNotFoundError:
+        at = os.path.abspath(os.curdir) + os.sep + 'Archived' + os.sep + args.onstream_version
+        os.mkdir(at)
+    except FileExistsError:
+        pass
     test_start = [
         {
             "measurement": "OnStream",
             "tags": {
                 "Software": version,
                 "Test": mc.get_value(),
-                "URL": ChannelCount.dishtv, 
+                "URL": ChannelCount.dishtv,
                 "Browser": "Edge",
+                "Device": device,
             },
             "time": time.time_ns(),
             "fields": {
@@ -71,8 +73,9 @@ def auto_start(request):
                 "tags": {
                     "Software": version,
                     "Test": mc.get_value(),
-                    "URL": ChannelCount.dishtv, 
+                    "URL": ChannelCount.dishtv,
                     "Browser": "Edge",
+                    "Device": device,
                 },
                 "time": time.time_ns(),
                 "fields": {
@@ -83,20 +86,11 @@ def auto_start(request):
             }
         ]
         client.write_points(test_end)
-        try:
-            Archived = os.path.join(base_path) + '/' + 'Archived' + '/' + testrun + '/' + mc.get_value()
-            os.mkdir(Archived)
-        except FileNotFoundError:
-            tr = os.path.join(base_path) + '/' + 'Archived' + '/' + testrun
-            os.mkdir(tr)
-        except FileExistsError:
-            Archived = os.path.join(base_path) + '/' + 'Archived' + '/' + testrun + '/' + mc.get_value() + 'duplicate'
-            os.mkdir(Archived)
 
-        Pictures = os.path.join(base_path) + '/' + 'Pictures' + '/'
-        Duration = os.path.join(base_path) + '/' + 'Duration' + '/'
+        Pictures = os.path.abspath(os.curdir) + os.sep + 'Pictures' + os.sep
+        Duration = os.path.abspath(os.curdir) + os.sep + 'Pictures' + os.sep
 
-        dest = os.path.join(base_path, 'Archived') + '/' + testrun + '/' + mc.get_value()
+        dest = os.path.abspath(os.curdir) + os.sep + 'Archived' + os.sep + args.onstream_version + os.sep + str(browser) + '_' + str(testrun)
 
         try:
             PicturesFile = os.listdir(Pictures)
@@ -123,8 +117,7 @@ def auto_start(request):
 @pytest.fixture(scope="class")
 def directory(request):
     name = os.environ.get('PYTEST_CURRENT_TEST')
-    """.split(':')[-1].split(' ')[0]"""
-    direct = os.path.join(picture_path) + "/"
+    direct = os.path.abspath(os.curdir) + os.sep + 'Pictures' + os.sep
     request.cls.direct = direct
     request.cls.name = name
     yield

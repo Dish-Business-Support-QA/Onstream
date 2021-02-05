@@ -15,20 +15,12 @@ from webdriver_manager.chrome import ChromeDriverManager
 from msedge.selenium_tools import EdgeOptions
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from argument_onstream import args
 
-try:
-    base_path = os.environ['ONSTREAM_HOME']
-except KeyError:
-    print('Could not get environment variable "base_path". This is needed for the tests!"')
-    raise
-try:
-    test_path = os.environ['ONSTREAM_TEST']
-except KeyError:
-    print('Could not get environment variable "test_path". This is needed for the tests!"')
-    raise
+browser = os.path.basename(__file__).split("_")[0]
 plat = platform.platform().split('-')
 device = str(plat[0] + "-" + plat[1])
-version = '1.2.32'
+version = args.onstream_version
 all_logos = []  # For storing all the JSON files of the logos
 in_use_logos = []  # Create a list of the the logos in the OnStream guide
 guide_uid = []  # A list of the OnStream UID's from the guide
@@ -46,7 +38,7 @@ class SmartboxData(object):
     optionsforchrome.add_argument('--ignore-certificate-errors')
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=optionsforchrome)
-    SMARTBOX = "https://10.11.46.143"
+    SMARTBOX = args.smartbox_ip
     driver.get(SMARTBOX)
     driver.maximize_window()
     driver.find_element(By.NAME, "username").click()
@@ -56,7 +48,7 @@ class SmartboxData(object):
     driver.find_element(By.XPATH, "//input[@value=\'Login\']").click()
     time.sleep(5)
     fieldnames = ['Time']
-    driver.get("https://10.11.46.143/getanalytics.php")
+    driver.get(args.smartbox_ip + "/getanalytics.php")
     result = json.loads(driver.find_element(By.TAG_NAME, 'body').text)
     result_tree = Tree(result)
     service_name_path = "$.webFullStreamInfo.service.serviceName"
@@ -82,7 +74,7 @@ class ChannelCount(object):
     caps.use_chromium = True
     service = Service(EdgeChromiumDriverManager().install())
     driver = webdriver.Edge(options=caps, service=service)
-    dishtv = "https://test.watchdishtv.com/"
+    dishtv = args.onstream_url
     driver.get(dishtv)
     WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[1]/div[2]/span/span[2]/a/span'))).click()  # Click on the TV Guide Button
     WebDriverWait(driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))  # Wait for the loading screen to disappear
@@ -139,18 +131,18 @@ class CountRun:
         self.counter = 0
 
     def get_value(self):
-        with open(os.path.join(base_path, 'test_run_num.txt'), 'r') as rt:
+        with open(os.path.abspath(os.curdir + os.sep + 'test_run_num.txt'), 'r') as rt:
             self.line = str(rt.read())
         return self.line
 
     def save_value(self):
-        with open(os.path.join(base_path, 'test_run_num.txt'), 'w+') as tr:
+        with open(os.path.abspath(os.curdir + os.sep + 'test_run_num.txt'), 'w+') as tr:
             tr.write(str(self.counter))
 
 
 class ChannelChange:
     def __init__(self):
-        self.change = 40
+        self.change = args.channel_loop
 
     def get_number(self):
         return self.change
@@ -165,7 +157,7 @@ def pytest_run():
     while int(len(channels)) < int(cc.get_number()):
         mc.increment()
         mc.save_value()
-        subprocess.run(['pytest', '--pytest-influxdb', '--influxdb_project=Edge', '--influxdb_run_id=' + str(mc.get_value()), '--influxdb_version=' + str(version), os.path.join(test_path, 'OnStream_Edge.py'), '-sv'])
+        subprocess.run(['pytest', '--pytest-influxdb', '--influxdb_project=Edge', '--influxdb_run_id=' + str(mc.get_value()), '--influxdb_version=' + str(version), os.path.abspath(os.curdir + os.sep + 'OnStream_Edge.py'), '-sv'])
         channels = ChannelCount.all_channels + channels
 
 

@@ -4,7 +4,6 @@ DateTime
 pytest_cases
 objectpath
 webdriver_manager
-Appium-Python-Client
 pytest-influxdb
 
 

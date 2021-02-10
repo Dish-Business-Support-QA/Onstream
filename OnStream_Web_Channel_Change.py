@@ -34,7 +34,7 @@ client = InfluxDBClient(host=grafana, port=8086, database='ONSTREAM')
 
 plat = platform.platform().split('-')
 device = str(plat[0] + "-" + plat[1])
-version = '1.2.28'
+version = '1.3.0'
 name = os.environ.get('PYTEST_CURRENT_TEST')
 direct = os.path.join(picture_path) + "/"
 
@@ -48,13 +48,13 @@ class ChannelCount(object):
     caps['goog:loggingPrefs'] = {'performance': 'ALL'}
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, desired_capabilities=caps)
-    dishtv = "https://test.watchdishtv.com/"
+    dishtv = "https://davita.watchdishtv.com/"
     driver.get(dishtv)
-    WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//button[@class="_2YXx31Mkp4UfixOG740yi7 schema_accent_background"]'))).click()
-    WebDriverWait(driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))
-    WebDriverWait(driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//img[@alt="9491"]')))
+    WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[1]/div[2]/span/span[2]/a/span'))).click()  # Click on the TV Guide Button
+    WebDriverWait(driver, 30).until_not(ec.visibility_of_element_located((By.XPATH, '//div[@class="nvI2gN1AMYiKwYvKEdfIc schema_accent_border-bottom schema_accent_border-right schema_accent_border-left"]')))  # Wait for the loading screen to disappear
+    WebDriverWait(driver, 30).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div[1]/div[1]')))  # Wait for the TODAY text to appear
     links = []
-    channels = driver.find_elements(By.XPATH, '(//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"])')
+    channels = driver.find_elements(By.XPATH, '//a[@class="_2GEDK4s6kna2Yfl6_0Q6c_"]')  # Get the Video Player Classes
     for i in range(len(channels)):
         links.append(channels[i].get_attribute("href"))
     all_channels = list(dict.fromkeys(links))
@@ -64,7 +64,7 @@ class ChannelCount(object):
 
 class WebDrivers(object):
     def __init__(self):
-        self.dishtv = "https://watchdishtv.com/"
+        self.dishtv = "https://davita.watchdishtv.com/"
 
     def chrome(self):
         from webdriver_manager.chrome import ChromeDriverManager
@@ -766,7 +766,7 @@ class CountRun:
 
 class ChannelChange:
     def __init__(self):
-        self.change = 50
+        self.change = 15
 
     def get_number(self):
         return self.change

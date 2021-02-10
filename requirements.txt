@@ -1,0 +1,13 @@
+## REQUIREMENTS THAT DO NOT NEED A SPECIFIC VERSION ##
+pytest
+DateTime
+pytest_cases
+objectpath
+webdriver_manager
+Appium-Python-Client
+pytest-influxdb
+
+
+## REQUIREMENTS THAT HAVE VERSION SPECIFIERS ##
+selenium == 4.0.0a6
+Appium-Python-Client == 2.0.0a0

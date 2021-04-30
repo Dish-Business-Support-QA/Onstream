@@ -3,6 +3,8 @@ import json
 import time
 import os
 import re
+import requests
+from requests.auth import HTTPBasicAuth
 from pytest_cases import fixture
 from objectpath import Tree
 from selenium import webdriver
@@ -29,7 +31,6 @@ def pytest_addoption(parser):
     parser.addoption("--grafana_ip", dest="grafana_ip", action="store", default="10.11.46.179", help="The IP of the Grafana instance")
     parser.addoption("--grafana_port", dest="grafana_port", action="store", default="8086", help="The IP of the Grafana instance")
     parser.addoption("--custom_logo", dest="custom_logo", action="store", default="Infio Whites", help="The Custom Logo which appears in the middle of the main page for OnStream")  #Changed the custom logo
-
 
 @pytest.fixture(scope="session")
 def onstream_url(request):
@@ -68,42 +69,24 @@ def custom_logo(request):
 
 @pytest.fixture(scope="session", autouse=True)
 def smartbox_setup(request, smartbox_ip):
-    optionsforchrome = Options()
-    optionsforchrome.add_argument('--no-sandbox')
-    optionsforchrome.add_argument('--start-maximized')
-    optionsforchrome.add_argument('--disable-extensions')
-    optionsforchrome.add_argument('--disable-dev-shm-usage')
-    optionsforchrome.add_argument('--ignore-certificate-errors')
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=optionsforchrome)
-    SMARTBOX = smartbox_ip
-    driver.get(SMARTBOX)
-    driver.maximize_window()
-    driver.find_element(By.NAME, "username").click()
-    driver.find_element(By.NAME, "username").send_keys("username")
-    driver.find_element(By.NAME, "password").click()
-    driver.find_element(By.NAME, "password").send_keys("password")
-    driver.find_element(By.XPATH, "//input[@value=\'Login\']").click()
-    time.sleep(5)
-    fieldnames = ['Time']
-    driver.get(smartbox_ip + "/getanalytics.php")
-    result = json.loads(driver.find_element(By.TAG_NAME, 'body').text)
-    result_tree = Tree(result)
-    service_name_path = "$.webFullStreamInfo.service.serviceName"
-    service_name = result_tree.execute(service_name_path)
-    service_identifier_path = "$.webFullStreamInfo.service.serviceIdentifier"
-    service_identifier = result_tree.execute(service_identifier_path)
-    service_state_path = "$.webFullStreamInfo.service.state"
-    service_state = result_tree.execute(service_state_path)
-    service_name_list = list(service_name)
-    service_identifier_list = list(service_identifier)
-    service_state_list = list(service_state)
-    d = {z[0]: list(z[1:]) for z in zip(service_name_list, service_identifier_list, service_state_list)}
-    for key, value in d.items():
-        if value[1] == 'Service is active':
+    
+    url = smartbox_ip + "/web/analytics/streaminfo"
+    response = requests.get(url,
+                            auth=HTTPBasicAuth('username', 'password'), verify=False,
+                            headers={'User-Agent': 'Custom'})
+
+    # print(response)
+    out_json = response.json()
+    data = out_json['data']['services']
+    info = {}
+    for services in data:
+        temp_list = [services['serviceId']]
+        temp_list.append(services['overallState']['color'])
+        info[services['serviceName']] = temp_list
+    for key, value in info.items():
+        if value[1] == 'OK':
             kv = key, value
             active_service.append(kv)
-    driver.quit()
     return active_service
 
 
